@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.DatePicker?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
+	<stylesheets>
+		<URL value="@application.css" />
+	</stylesheets>
+	<center>
+		<SplitPane>
+			<HBox fillHeight="true">
+				<BorderPane>
+					<top>
+						<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
+							<Button text="Open Target Folder " onAction="#openTargetFolderClicked">
+								<tooltip>
+									<Tooltip
+										text="Use to open a folder that acts as a target for the sorting ." />
+								</tooltip>
+							</Button>
+							<ComboBox fx:id="yearsCombobox">
+							</ComboBox>
+						</ToolBar>
+					</top>
+					<left>
+						<ListView fx:id="categoriesListView">
+						</ListView>
+					</left>
+					<center>
+						<ListView fx:id="sortedPicturesListView">
+						</ListView>
+					</center>
+					<right>
+						<GridPane hgap="5" vgap="5">
+							<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="categoryNameTextField"></TextField>
+							<DatePicker GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="earliestDateDatePicker" editable="false"></DatePicker>
+						</GridPane>
+					</right>
+					<bottom>
+					<ProgressBar fx:id="sortedPicturesProgressBar">
+					</ProgressBar>
+					</bottom>
+				</BorderPane>
+			</HBox>
+			<HBox fillHeight="true">
+				<BorderPane>
+					<top>
+						<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
+							<Button text="Open Unsorted Pictures" onAction="#openFolderOfUnsortedPicturesClicked">
+								<tooltip>
+									<Tooltip
+										text="Use to open a folder containing pictures to be sorted." />
+								</tooltip>
+							</Button>
+							<Button text="Remove" onAction="#removeClicked">
+							</Button>
+						</ToolBar>
+					</top>
+					<center>
+						<ListView fx:id="imageGroupListView">
+						</ListView>
+					</center>
+					<right>
+						<ListView fx:id="unsortedPicturesListView">
+						</ListView>
+					</right>
+				</BorderPane>
+			</HBox>
+		</SplitPane>
+	</center>
+</fx:root>

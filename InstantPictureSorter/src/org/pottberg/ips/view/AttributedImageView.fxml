@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.GridPane?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
+	<left>
+		<StackPane>
+			<ImageView fx:id="imageView"></ImageView>
+			<ProgressBar fx:id="imageProgress"></ProgressBar>
+		</StackPane>
+	</left>
+	<center>
+		<GridPane hgap="2" vgap="2">
+			<Text GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="name"></Text>
+			<Text GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="creationDateText"></Text>
+		</GridPane>
+	</center>
+</fx:root>
