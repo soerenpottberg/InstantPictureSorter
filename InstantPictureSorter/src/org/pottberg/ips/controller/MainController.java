@@ -13,10 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -27,6 +25,7 @@ import org.pottberg.ips.model.Year;
 import org.pottberg.ips.model.loader.service.CategoryLoaderService;
 import org.pottberg.ips.model.loader.service.ImageGroupLoaderService;
 import org.pottberg.ips.view.AttributedImageListCell;
+import org.pottberg.ips.view.CategoryEditForm;
 import org.pottberg.ips.view.CategoryListCell;
 import org.pottberg.ips.view.ImageGroupListCell;
 import org.pottberg.ips.view.ImageListCell;
@@ -54,10 +53,7 @@ public class MainController {
     private ProgressBar sortedPicturesProgressBar;
 
     @FXML
-    private TextField categoryNameTextField;
-
-    @FXML
-    private DatePicker earliestDateDatePicker;
+    private CategoryEditForm categoryEditForm;
 
     private ObjectProperty<Path> selectedTargetPath;
 
@@ -119,7 +115,8 @@ public class MainController {
 	this.primaryStage = primaryStage;
     }
 
-    public void init() {
+    @FXML
+    private void initialize() {
 
 	selectedTargetPath.addListener((observablePath, oldPath, newPath) -> {
 	    categoryLoaderService.cancel();
@@ -168,26 +165,25 @@ public class MainController {
 	    return new CategoryListCell();
 	});
 
+	categoryEditForm.categoryProperty()
+	    .bind(categoriesListView.getSelectionModel()
+		.selectedItemProperty());
+
 	categoriesListView.getSelectionModel()
 	    .selectedItemProperty()
-	    .addListener((observableCategory, oldCategory, newCategory) -> {
-		if (oldCategory != null) {
-		    oldCategory.stopLoadingImages();
-		}
-		sortedPicturesProgressBar.progressProperty()
-		    .unbind();
-		categoryNameTextField.setText("");
-		earliestDateDatePicker.valueProperty()
-		    .unbind();
-		if (newCategory != null) {
-		    categoryNameTextField.setText(newCategory.getLabel());
-		    earliestDateDatePicker.valueProperty()
-			.bind(newCategory.earliestDateProperty());
+	    .addListener(
+		(observableCategory, oldCategory, newCategory) -> {
+		    if (oldCategory != null) {
+			oldCategory.stopLoadingImages();
+		    }
 		    sortedPicturesProgressBar.progressProperty()
-			.bind(newCategory.progressProperty());
-		    newCategory.startLoadingImages();
-		}
-	    });
+			.unbind();
+		    if (newCategory != null) {
+			sortedPicturesProgressBar.progressProperty()
+			    .bind(newCategory.progressProperty());
+			newCategory.startLoadingImages();
+		    }
+		});
 
 	imageGroupListView.getSelectionModel()
 	    .selectedItemProperty()
@@ -220,7 +216,7 @@ public class MainController {
 	    return selectedCategory.get()
 		.getImageData();
 	}, selectedCategory);
-	
+
 	selectedImageGroupImageData = Bindings.createObjectBinding(() -> {
 	    if (selectedImageGroup.get() == null) {
 		return null;

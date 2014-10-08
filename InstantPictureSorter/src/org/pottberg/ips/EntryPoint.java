@@ -17,7 +17,6 @@ public class EntryPoint extends Application {
 
 	primaryStage.setTitle("Instant Picture Sorter");
 	primaryStage.setScene(scene);
-	root.init();
 	primaryStage.show();
     }
 

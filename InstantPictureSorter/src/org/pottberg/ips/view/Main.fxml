@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.DatePicker?>
+<?import org.pottberg.ips.view.CategoryEditForm?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
@@ -39,14 +40,11 @@
 						</ListView>
 					</center>
 					<right>
-						<GridPane hgap="5" vgap="5">
-							<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="categoryNameTextField"></TextField>
-							<DatePicker GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="earliestDateDatePicker" editable="false"></DatePicker>
-						</GridPane>
+						<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
 					</right>
 					<bottom>
-					<ProgressBar fx:id="sortedPicturesProgressBar">
-					</ProgressBar>
+						<ProgressBar fx:id="sortedPicturesProgressBar">
+						</ProgressBar>
 					</bottom>
 				</BorderPane>
 			</HBox>

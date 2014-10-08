@@ -1,0 +1,10 @@
+.preview{
+	-fx-border-style: dotted;
+	-fx-padding: 5px;
+	-fx-text-overrun: center-ellipsis;
+}
+.gridpane{
+	-fx-padding: 5px;
+	-fx-hgap: 5px;
+	-fx-vgap: 5px;
+}

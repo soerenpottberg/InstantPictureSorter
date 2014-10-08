@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
 import org.pottberg.ips.model.Category;
+import org.pottberg.ips.model.SimpleCategory;
 import org.pottberg.ips.model.Year;
 
 public class CategoryLoader extends Task<ObservableList<Year>> {
@@ -49,7 +50,7 @@ public class CategoryLoader extends Task<ObservableList<Year>> {
 		if (!Files.isDirectory(categoryPath)) {
 		    continue;
 		}
-		Category category = new Category(categoryPath);
+		Category category = new SimpleCategory(categoryPath);
 		year.addCategory(category);
 	    }
 	}

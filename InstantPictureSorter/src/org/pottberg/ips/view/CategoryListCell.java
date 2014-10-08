@@ -15,7 +15,7 @@ public class CategoryListCell extends ListCell<Category> {
 	    setText(null);
 	    setGraphic(null);
 	} else {
-	    textProperty().bind(item.getLabelProperty());
+	    textProperty().bind(item.nameProperty());
 	}
 
     }

@@ -5,152 +5,46 @@ import java.time.LocalDate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker.State;
 
-import org.pottberg.ips.model.loader.ImageNameLoader;
-import org.pottberg.ips.model.loader.service.CreationDateLoaderService;
-import org.pottberg.ips.model.loader.service.ImageDataLoaderService;
-import org.pottberg.ips.model.loader.service.ImageLoaderService;
+public interface Category {
 
-public class Category {
+    public StringProperty nameProperty();
 
-    private StringProperty labelProperty;
-    private ObservableList<ImageData> imageData;
-    private ImageLoaderService imageLoaderService;
-    private ImageNameLoader imageNameLoader;
-    private CreationDateLoaderService fileAttributeLoaderService;
-    
-    private ObjectProperty<LocalDate> earliestDateProperty;
-    private ObjectProperty<LocalDate> lastDateProperty;
+    public String getName();
 
-    public Category(Path dir) {
-	imageNameLoader = new ImageNameLoader(dir);
+    public ObservableList<ImageData> getImageData();
 
-	labelProperty = new SimpleStringProperty(dir.getFileName()
-	    .toString());
-	imageLoaderService = new ImageLoaderService();
-	fileAttributeLoaderService = new CreationDateLoaderService();
-	fileAttributeLoaderService.setOnSucceeded(event -> {
-	    calculateDates();
-	});
-	earliestDateProperty = new SimpleObjectProperty<LocalDate>();
-	lastDateProperty = new SimpleObjectProperty<LocalDate>();	 
-    }
+    public void startLoadingImages();
 
-    private void calculateDates() {
-	LocalDate earlierstDate = null;
-	LocalDate lastDate = null;
-	for (ImageData data : imageData) {
-	    if(earlierstDate == null || data.getCreationDate().isBefore(earlierstDate)) {
-		earlierstDate = data.getCreationDate();
-	    }
-	    if(lastDate == null || data.getCreationDate().isAfter(lastDate)) {
-		lastDate = data.getCreationDate();
-	    }
-	}
-	earliestDateProperty.set(earlierstDate);
-	lastDateProperty.set(lastDate);
-    }
+    public void stopLoadingImages();
 
-    public ReadOnlyStringProperty getLabelProperty() {
-	return labelProperty;
-    }
+    public void startLoadingFileAttributes();
 
-    public String getLabel() {
-	return labelProperty.get();
-    }
+    public void stopLoadingFileAttributes();
 
-    public ObservableList<ImageData> getImageData() {
+    public ReadOnlyDoubleProperty progressProperty();
 
-	if (imageData == null) {
-	    calculateImageData();
-	}
-	return imageData;
+    public double getProgress();
 
-    }
+    public ObjectProperty<LocalDate> startDateProperty();
 
-    private void calculateImageData() {
+    public ObjectProperty<LocalDate> endDateProperty();
 
-	if (imageNameLoader.getState() != State.READY) {
-	    return;
-	}
+    public ObjectProperty<LocalDate> userDefinedStartDateProperty();
 
-	imageNameLoader.setOnSucceeded(event -> {
-	    startInitialService(imageLoaderService);
-	    startInitialService(fileAttributeLoaderService);
-	});
-	new Thread(imageNameLoader).start();
+    public ObjectProperty<LocalDate> userDefinedEndDateProperty();
 
-	imageData = imageNameLoader.getPartialResults();
+    public ObjectProperty<Path> directoryProperty();
 
-    }
+    public Path getDirectory();
 
-    public void startLoadingImages() {
-	startService(imageLoaderService);
-    }
+    public void setName(String name);
 
-    public void stopLoadingImages() {
-	stopService(imageLoaderService);
-    }
+    public void setDirtectoy(Path dir);
 
-    public void startLoadingFileAttributes() {
-	startService(fileAttributeLoaderService);
-    }
+    public String getDirectoryName();
 
-    public void stopLoadingFileAttributes() {
-	stopService(fileAttributeLoaderService);
-    }
-
-    private void startInitialService(ImageDataLoaderService service) {
-	if (service.getState() != State.READY) {
-	    return;
-	}
-	service.setImageData(imageData);
-	service.start();
-    }
-
-    private void startService(ImageDataLoaderService service) {
-	if (imageNameLoader.getState() != State.SUCCEEDED) {
-	    return;
-	}
-	switch (service.getState()) {
-	case READY:
-	    startInitialService(service);
-	    break;
-	case CANCELLED:
-	    service.restart();
-	    break;
-	default:
-	    break;
-	}
-    }
-
-    private void stopService(ImageDataLoaderService service) {
-	if (service.getState() == State.SUCCEEDED) {
-	    return;
-	}
-	service.cancel();
-    }
-
-    public ReadOnlyDoubleProperty progressProperty() {
-	return imageLoaderService.progressProperty();
-    }
-
-    public double getProgress() {
-	return imageLoaderService.getProgress();
-    }
-
-    public ObjectProperty<LocalDate> earliestDateProperty() {
-	return earliestDateProperty;
-    }
-    
-    public ObjectProperty<LocalDate> lastDateProperty() {
-	return lastDateProperty;
-    }
-
+    public void reset();
 }

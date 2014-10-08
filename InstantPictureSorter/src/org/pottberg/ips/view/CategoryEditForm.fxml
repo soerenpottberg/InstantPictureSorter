@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml"
+	hgap="4" vgap="4" styleClass="gridpane">
+	<fx:define>
+		<ToggleGroup fx:id="dateRangeToggleGroup"></ToggleGroup>
+	</fx:define>
+
+	<Label GridPane.rowIndex="0" GridPane.columnIndex="0">Name: </Label>
+	<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+		GridPane.columnSpan="2" fx:id="nameTextField"></TextField>
+
+	<Separator GridPane.rowIndex="1" GridPane.columnIndex="0"
+		GridPane.columnSpan="3"></Separator>
+
+	<RadioButton GridPane.rowIndex="2" GridPane.columnIndex="0"
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="automaticRadioButton"
+		selected="true">Suggested Name
+	</RadioButton>
+	<Label GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="preview"
+		fx:id="suggestedNamePreviewLabel"></Label>
+
+	<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="fullYearRadioButton">Full
+		Year
+	</RadioButton>
+	<Label GridPane.rowIndex="3" GridPane.columnIndex="2" styleClass="preview"
+		fx:id="fullYearNamePreviewLabel"></Label>
+
+	<RadioButton GridPane.rowIndex="4" GridPane.columnIndex="0"
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="manualRadioButton">User Defined
+	</RadioButton>
+	<Label GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="preview"
+		fx:id="userDefinedNamePreviewLabel"></Label>
+	<Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date:
+	</Label>
+	<DatePicker GridPane.rowIndex="5" GridPane.columnIndex="2"
+		fx:id="startDatePicker"></DatePicker>
+	<Label GridPane.rowIndex="6" GridPane.columnIndex="1">End Date:
+	</Label>
+	<DatePicker GridPane.rowIndex="6" GridPane.columnIndex="2"
+		fx:id="endDatePicker"></DatePicker>
+
+
+	<Separator GridPane.rowIndex="7" GridPane.columnIndex="0"
+		GridPane.columnSpan="3"></Separator>
+
+	<Button GridPane.rowIndex="8" GridPane.columnIndex="0"
+		GridPane.columnSpan="2" text="Rename Category" onAction="#renameCategoryClicked">
+		<tooltip>
+			<Tooltip text="Renames the corresponding folder on the file system." />
+		</tooltip>
+	</Button>
+	<Label GridPane.rowIndex="8" GridPane.columnIndex="2"
+		styleClass="preview" fx:id="namePreviewLabel"></Label>
+
+	<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
+		GridPane.columnSpan="2" text="Discard Changes" onAction="#resetCategoryClicked">
+		<tooltip>
+			<Tooltip text="All unsaved changes to this category will be lost." />
+		</tooltip>
+	</Button>
+	<Label GridPane.rowIndex="9" GridPane.columnIndex="2"
+		styleClass="preview" fx:id="currentPathLabel"></Label>
+</fx:root>
