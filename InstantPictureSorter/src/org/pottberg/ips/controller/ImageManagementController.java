@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -14,30 +13,21 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.stage.DirectoryChooser;
 
-import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
 import org.pottberg.ips.model.Year;
 import org.pottberg.ips.model.command.MoveImagesCommand;
 import org.pottberg.ips.model.loader.service.ImageGroupLoaderService;
-import org.pottberg.ips.view.CategoryListCell;
 import org.pottberg.ips.view.ImageGroupListCell;
 import org.pottberg.ips.view.ImageListCell;
 
-public class ImageManagementController {
+public class ImageManagementController extends CategoryBasedController {
 
     @FXML
     private Button openSourceFolderButton;
-
-    @FXML
-    private ComboBox<Year> yearsCombobox;
-
-    @FXML
-    private ListView<Category> categoriesListView;
 
     @FXML
     private ListView<ImageGroup> imageGroupListView;
@@ -45,14 +35,6 @@ public class ImageManagementController {
     @FXML
     private ListView<ImageData> unsortedPicturesListView;
     
-    private ObjectProperty<ObservableList<Year>> yearListProperty;
-
-    private ObjectProperty<Year> selectedYear;
-
-    private ObjectBinding<ObservableList<Category>> selectedYearCategories;
-
-    private ObjectProperty<Category> selectedCategory;
-
     private ObjectProperty<Path> selectedSourcePath;
 
     private ImageGroupLoaderService imageGroupLoaderService;
@@ -64,42 +46,17 @@ public class ImageManagementController {
     private ObservableList<ImageData> selectedUnsortedImageData;
 
     public ImageManagementController() {
-	yearListProperty = new SimpleObjectProperty<>();
-	selectedYear = new SimpleObjectProperty<>();
-	selectedCategory = new SimpleObjectProperty<>();
 	selectedSourcePath = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
 	selectedImageGroup = new SimpleObjectProperty<>();
 	selectedUnsortedImageData = FXCollections.observableArrayList();
     }
 
+    @Override
     @FXML
-    private void initialize() {
-	yearListProperty.addListener((observableYearList, oldYearList,
-	    newYearList) -> {
-	    yearsCombobox.setItems(newYearList);
-	    yearsCombobox.getSelectionModel()
-		.selectLast();
-	});
+    protected void initialize() {
+	super.initialize();
 	
-	categoriesListView.setCellFactory(param -> {
-	    return new CategoryListCell();
-	});
-
-	selectedYear.bind(getSelectedItemProperty(yearsCombobox));
-	selectedCategory.bind(getSelectedItemProperty(categoriesListView));
-
-	selectedYearCategories = Bindings.createObjectBinding(() -> {
-	    if (selectedYear.get() == null) {
-		return null;
-	    }
-	    return selectedYear.get()
-		.getCategories();
-	}, selectedYear);
-
-	categoriesListView.itemsProperty()
-	    .bind(selectedYearCategories);
-
 	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
 	    imageGroupLoaderService.cancel();
 	    imageGroupLoaderService.reset();
@@ -162,18 +119,6 @@ public class ImageManagementController {
 
 	unsortedPicturesListView.itemsProperty()
 	    .bind(selectedImageGroupImageData);
-    }
-
-    private <T> ReadOnlyObjectProperty<T> getSelectedItemProperty(
-	ComboBox<T> comboBox) {
-	return comboBox.getSelectionModel()
-	    .selectedItemProperty();
-    }
-
-    private <T> ReadOnlyObjectProperty<T> getSelectedItemProperty(
-	ListView<T> listView) {
-	return listView.getSelectionModel()
-	    .selectedItemProperty();
     }
 
     @FXML

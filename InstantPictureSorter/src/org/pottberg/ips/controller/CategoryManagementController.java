@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,9 +22,8 @@ import org.pottberg.ips.model.Year;
 import org.pottberg.ips.model.loader.service.CategoryLoaderService;
 import org.pottberg.ips.view.AttributedImageListCell;
 import org.pottberg.ips.view.CategoryEditForm;
-import org.pottberg.ips.view.CategoryListCell;
 
-public class CategoryManagementController {
+public class CategoryManagementController extends CategoryBasedController {
 
     @FXML
     private Button openTargetFolderButton;
@@ -49,27 +47,17 @@ public class CategoryManagementController {
 
     private CategoryLoaderService categoryLoaderService;
 
-    private ObjectProperty<ObservableList<Year>> yearListProperty;
-
-    private ObjectProperty<Year> selectedYear;
-
-    private ObjectBinding<ObservableList<Category>> selectedYearCategories;
-
-    private ObjectProperty<Category> selectedCategory;
-
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
 
     public CategoryManagementController() {
 	selectedTargetPath = new SimpleObjectProperty<>();
 	categoryLoaderService = new CategoryLoaderService();
-	yearListProperty = new SimpleObjectProperty<>();
-	selectedYear = new SimpleObjectProperty<>();
-	selectedCategory = new SimpleObjectProperty<>();
     }
 
     @FXML
-    private void initialize() {
-
+    protected void initialize() {
+	super.initialize();
+	
 	selectedTargetPath.addListener((observablePath, oldPath, newPath) -> {
 	    categoryLoaderService.cancel();
 	    categoryLoaderService.reset();
@@ -83,19 +71,8 @@ public class CategoryManagementController {
 	    });
 	});
 
-	yearListProperty.addListener((observableYearList, oldYearList,
-	    newYearList) -> {
-	    yearsCombobox.setItems(newYearList);
-	    yearsCombobox.getSelectionModel()
-		.selectLast();
-	});
-
 	sortedPicturesListView.setCellFactory(param -> {
 	    return new AttributedImageListCell();
-	});
-
-	categoriesListView.setCellFactory(param -> {
-	    return new CategoryListCell();
 	});
 
 	categoryEditForm.categoryProperty()
@@ -119,17 +96,6 @@ public class CategoryManagementController {
 		    }
 		});
 
-	selectedYear.bind(getSelectedItemProperty(yearsCombobox));
-	selectedCategory.bind(getSelectedItemProperty(categoriesListView));
-
-	selectedYearCategories = Bindings.createObjectBinding(() -> {
-	    if (selectedYear.get() == null) {
-		return null;
-	    }
-	    return selectedYear.get()
-		.getCategories();
-	}, selectedYear);
-
 	selectedCategoryImageData = Bindings.createObjectBinding(() -> {
 	    if (selectedCategory.get() == null) {
 		return null;
@@ -138,23 +104,9 @@ public class CategoryManagementController {
 		.getImageDataList();
 	}, selectedCategory);
 
-	categoriesListView.itemsProperty()
-	    .bind(selectedYearCategories);
 	sortedPicturesListView.itemsProperty()
 	    .bind(selectedCategoryImageData);
 
-    }
-
-    private <T> ReadOnlyObjectProperty<T> getSelectedItemProperty(
-	ComboBox<T> comboBox) {
-	return comboBox.getSelectionModel()
-	    .selectedItemProperty();
-    }
-
-    private <T> ReadOnlyObjectProperty<T> getSelectedItemProperty(
-	ListView<T> listView) {
-	return listView.getSelectionModel()
-	    .selectedItemProperty();
     }
 
     @FXML
