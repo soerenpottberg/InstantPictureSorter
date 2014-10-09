@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
@@ -23,16 +24,16 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class CreationDateLoader extends Task<Void> {
 
-    private ObservableList<ImageData> imageData;
+    private ObservableList<ImageData> imageDataList;
     private boolean useFxApplicationThread;
 
-    public CreationDateLoader(ObservableList<ImageData> imageData) {
-	this(imageData, true);
+    public CreationDateLoader(ObservableList<ImageData> imageDataList) {
+	this(imageDataList, true);
     }
 
-    public CreationDateLoader(ObservableList<ImageData> imageData,
+    public CreationDateLoader(ObservableList<ImageData> imageDataList,
 	boolean useFxApplicationThread) {
-	this.imageData = imageData;
+	this.imageDataList = FXCollections.observableArrayList(imageDataList);
 	this.useFxApplicationThread = useFxApplicationThread;
     }
 
@@ -44,24 +45,24 @@ public class CreationDateLoader extends Task<Void> {
 
     private void loadAttributes() throws IOException, JpegProcessingException {
 	int i = 0;
-	updateProgress(i, imageData.size());
-	for (ImageData data : imageData) {
+	updateProgress(i, imageDataList.size());
+	for (ImageData imageData : imageDataList) {
 	    i++;
-	    if (data.hasCreationDate()) {
-		updateProgress(i, imageData.size());
+	    if (imageData.hasCreationDate()) {
+		updateProgress(i, imageDataList.size());
 		continue;
 	    }
 
-	    Path filePath = data.getPath();
+	    Path filePath = imageData.getPath();
 
 	    LocalDate creationDate = readCreadionDate(filePath);
 
-	    setCreationDate(data, creationDate);
+	    setCreationDate(imageData, creationDate);
 
 	    if (isCancelled()) {
 		return;
 	    }
-	    updateProgress(i, imageData.size());
+	    updateProgress(i, imageDataList.size());
 	}
 	return;
     }
@@ -133,9 +134,9 @@ public class CreationDateLoader extends Task<Void> {
 	    .toLocalDate();
     }
 
-    public static void loadFileAttributes(ObservableList<ImageData> imageData)
+    public static void loadFileAttributes(ObservableList<ImageData> imageDataList)
 	throws IOException, JpegProcessingException {
-	new CreationDateLoader(imageData, false).loadAttributes();
+	new CreationDateLoader(imageDataList, false).loadAttributes();
     }
 
 }

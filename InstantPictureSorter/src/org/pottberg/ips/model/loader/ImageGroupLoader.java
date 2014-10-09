@@ -26,30 +26,30 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
     protected ObservableList<ImageGroup> call() throws Exception {
 
 	try {
-	ObservableList<ImageData> imageData = createImageData();
-	
-	loadCreationDate(imageData);
+	    ObservableList<ImageData> imageData = createImageData();
 
-	ObservableList<ImageGroup> imageGroups = createImageGroups(imageData);
-	
-	return imageGroups;
-	
+	    loadCreationDate(imageData);
+
+	    ObservableList<ImageGroup> imageGroups = createImageGroups(imageData);
+
+	    return imageGroups;
+
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-	
+
 	return null;
     }
 
     private ObservableList<ImageData> createImageData() throws IOException {
-        ObservableList<ImageData> imageData = FXCollections.observableArrayList();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir,
-            "*.{jpg,JPG,jpeg,JPEG}")) {
-            for (Path imagePath : stream) {
-        	imageData.add(new ImageData(imagePath));
-            }
-        }
-        return imageData;
+	ObservableList<ImageData> imageData = FXCollections.observableArrayList();
+	try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir,
+	    "*.{jpg,JPG,jpeg,JPEG}")) {
+	    for (Path imagePath : stream) {
+		imageData.add(new ImageData(imagePath));
+	    }
+	}
+	return imageData;
     }
 
     private void loadCreationDate(ObservableList<ImageData> imageData)

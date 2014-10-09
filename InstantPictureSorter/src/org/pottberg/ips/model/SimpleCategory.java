@@ -84,7 +84,7 @@ public class SimpleCategory implements Category {
     }
 
     @Override
-    public ObservableList<ImageData> getImageData() {
+    public ObservableList<ImageData> getImageDataList() {
 
 	if (imageData == null) {
 	    calculateImageData();

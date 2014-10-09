@@ -51,7 +51,6 @@ public class AttributedImageViewController {
 
     public void setImageData(ImageData data) {
 	imageProperty.bind(data.imagePorperty());
-	showImage(imageProperty.get());
 	setName(data.getPath()
 	    .getFileName()
 	    .toString());

@@ -14,7 +14,7 @@ public interface Category {
 
     public String getName();
 
-    public ObservableList<ImageData> getImageData();
+    public ObservableList<ImageData> getImageDataList();
 
     public void startLoadingImages();
 

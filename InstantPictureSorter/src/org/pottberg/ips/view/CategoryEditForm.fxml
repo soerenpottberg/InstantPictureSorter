@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 
 <fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml"
-	hgap="4" vgap="4" styleClass="gridpane">
+	styleClass="gridpane">
 	<fx:define>
 		<ToggleGroup fx:id="dateRangeToggleGroup"></ToggleGroup>
 	</fx:define>
@@ -42,7 +42,8 @@
 		fx:id="fullYearNamePreviewLabel"></Label>
 
 	<RadioButton GridPane.rowIndex="4" GridPane.columnIndex="0"
-		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="manualRadioButton">User Defined
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="manualRadioButton">User
+		Defined
 	</RadioButton>
 	<Label GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="preview"
 		fx:id="userDefinedNamePreviewLabel"></Label>
@@ -65,8 +66,8 @@
 			<Tooltip text="Renames the corresponding folder on the file system." />
 		</tooltip>
 	</Button>
-	<Label GridPane.rowIndex="8" GridPane.columnIndex="2"
-		styleClass="preview" fx:id="namePreviewLabel"></Label>
+	<Label GridPane.rowIndex="8" GridPane.columnIndex="2" styleClass="preview"
+		fx:id="namePreviewLabel"></Label>
 
 	<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
 		GridPane.columnSpan="2" text="Discard Changes" onAction="#resetCategoryClicked">
@@ -74,6 +75,6 @@
 			<Tooltip text="All unsaved changes to this category will be lost." />
 		</tooltip>
 	</Button>
-	<Label GridPane.rowIndex="9" GridPane.columnIndex="2"
-		styleClass="preview" fx:id="currentPathLabel"></Label>
+	<Label GridPane.rowIndex="9" GridPane.columnIndex="2" styleClass="preview"
+		fx:id="currentPathLabel"></Label>
 </fx:root>

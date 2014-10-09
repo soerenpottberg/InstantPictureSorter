@@ -8,3 +8,6 @@
 	-fx-hgap: 5px;
 	-fx-vgap: 5px;
 }
+.list-item-selected{
+	-fx-background-color: lime;
+}

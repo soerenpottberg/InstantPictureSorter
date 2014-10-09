@@ -39,7 +39,7 @@ public class MockCategory implements Category {
     }
 
     @Override
-    public ObservableList<ImageData> getImageData() {
+    public ObservableList<ImageData> getImageDataList() {
 	return null;
     }
    

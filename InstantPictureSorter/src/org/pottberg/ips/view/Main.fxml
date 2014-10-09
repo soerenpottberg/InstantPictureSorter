@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.DatePicker?>
 <?import org.pottberg.ips.view.CategoryEditForm?>
+<?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
@@ -62,13 +63,33 @@
 							</Button>
 						</ToolBar>
 					</top>
-					<center>
+					<left>
 						<ListView fx:id="imageGroupListView">
+						</ListView>
+					</left>
+					<center>
+						<ListView fx:id="unsortedPicturesListView">
 						</ListView>
 					</center>
 					<right>
-						<ListView fx:id="unsortedPicturesListView">
-						</ListView>
+						<VBox>
+							<Button text="Select All" onAction="#selectAllClicked">
+								<tooltip>
+									<Tooltip text="Select all pictures of the selected date." />
+								</tooltip>
+							</Button>
+							<Button text="Unselect All" onAction="#unselectAllClicked">
+								<tooltip>
+									<Tooltip text="Unselect all pictures of the selected date." />
+								</tooltip>
+							</Button>
+							<Button text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+								<tooltip>
+									<Tooltip
+										text="Move all selected pictucres to the selected category." />
+								</tooltip>
+							</Button>
+						</VBox>
 					</right>
 				</BorderPane>
 			</HBox>

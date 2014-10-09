@@ -20,7 +20,7 @@ import javafx.concurrent.Worker.State;
 import org.pottberg.ips.model.loader.service.ImageDataLoaderService;
 import org.pottberg.ips.model.loader.service.ImageLoaderService;
 
-public class ImageGroup {
+public class ImageGroup implements Comparable<ImageGroup> {
 
     private LocalDate creationDate;
     private ObservableList<ImageData> imageData;
@@ -73,7 +73,7 @@ public class ImageGroup {
 	imageData.add(data);
     }
 
-    public ObservableList<ImageData> getImageData() {
+    public ObservableList<ImageData> getImageDataList() {
 	return imageData;
     }
 
@@ -112,6 +112,11 @@ public class ImageGroup {
 	    return;
 	}
 	service.cancel();
+    }
+
+    @Override
+    public int compareTo(ImageGroup other) {
+	return getCreationDate().compareTo(other.getCreationDate());
     }
 
 }

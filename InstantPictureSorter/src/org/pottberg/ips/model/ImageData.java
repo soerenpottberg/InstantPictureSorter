@@ -83,5 +83,9 @@ public class ImageData implements Comparable<ImageData> {
         return creationDateProperty.get();
     }
 
+    public void setPath(Path path) {
+	this.path = path;	
+    }
+
 
 }

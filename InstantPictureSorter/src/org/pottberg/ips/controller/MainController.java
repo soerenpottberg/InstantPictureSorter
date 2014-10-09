@@ -8,6 +8,7 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +23,7 @@ import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
 import org.pottberg.ips.model.Year;
+import org.pottberg.ips.model.command.MoveImagesCommand;
 import org.pottberg.ips.model.loader.service.CategoryLoaderService;
 import org.pottberg.ips.model.loader.service.ImageGroupLoaderService;
 import org.pottberg.ips.view.AttributedImageListCell;
@@ -74,6 +76,8 @@ public class MainController {
     private ObjectProperty<Year> selectedYear;
 
     private ObjectBinding<ObservableList<Category>> selectedYearCategories;
+
+    private ObservableList<ImageData> selectedUnsortedImageData;
 
     public MainController() {
 	categoryLoaderService = new CategoryLoaderService();
@@ -138,13 +142,16 @@ public class MainController {
 	    imageGroupLoaderService.setOnSucceeded(workerEvent -> {
 		ObservableList<ImageGroup> imageGroups = imageGroupLoaderService.getValue();
 		for (ImageGroup imageGroup : imageGroups) {
-		    imageGroup.getImageData()
+		    imageGroup.getImageDataList()
 			.addListener(
-			    (ListChangeListener.Change<? extends ImageData> item) -> {
-				if (item.getList()
+			    (ListChangeListener<ImageData>) change -> {
+				ObservableList<ImageGroup> items = imageGroupListView.getItems();
+				if (change.getList()
 				    .size() == 0) {
-				    imageGroupListView.getItems()
-					.remove(imageGroup);
+				    items.remove(imageGroup);
+				} else if (!items.contains(imageGroup)) {
+				    items.add(imageGroup);
+				    FXCollections.sort(items);
 				}
 			    });
 		}
@@ -158,9 +165,11 @@ public class MainController {
 	imageGroupListView.setCellFactory(param -> {
 	    return new ImageGroupListCell();
 	});
+	selectedUnsortedImageData = FXCollections.observableArrayList();
 	unsortedPicturesListView.setCellFactory(param -> {
-	    return new ImageListCell();
+	    return new ImageListCell(selectedUnsortedImageData);
 	});
+
 	categoriesListView.setCellFactory(param -> {
 	    return new CategoryListCell();
 	});
@@ -214,7 +223,7 @@ public class MainController {
 		return null;
 	    }
 	    return selectedCategory.get()
-		.getImageData();
+		.getImageDataList();
 	}, selectedCategory);
 
 	selectedImageGroupImageData = Bindings.createObjectBinding(() -> {
@@ -222,8 +231,13 @@ public class MainController {
 		return null;
 	    }
 	    return selectedImageGroup.get()
-		.getImageData();
+		.getImageDataList();
 	}, selectedImageGroup);
+
+	selectedImageGroup.addListener((observableList, oldList,
+	    newList) -> {
+	    selectedUnsortedImageData.clear();
+	});
 
 	categoriesListView.itemsProperty()
 	    .bind(selectedYearCategories);
@@ -255,4 +269,25 @@ public class MainController {
 	}
     }
 
+    @FXML
+    private void moveToSelectedCategoryClicked(ActionEvent event) {
+	if (selectedUnsortedImageData.isEmpty() || selectedCategory.get() == null) {
+	    return;
+	}
+	MoveImagesCommand command = new MoveImagesCommand(null,
+	    selectedUnsortedImageData, selectedImageGroup.get(),
+	    selectedCategory.get());
+	selectedUnsortedImageData.clear();
+	command.execute();
+    }
+    
+    @FXML
+    private void selectAllClicked(ActionEvent event) {
+	selectedUnsortedImageData.setAll(selectedImageGroupImageData.get());
+    }
+    
+    @FXML
+    private void unselectAllClicked(ActionEvent event) {
+	selectedUnsortedImageData.clear();
+    }
 }
