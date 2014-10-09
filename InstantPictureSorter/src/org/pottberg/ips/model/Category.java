@@ -47,4 +47,6 @@ public interface Category {
     public String getDirectoryName();
 
     public void reset();
+
+    void loadImageNames();
 }

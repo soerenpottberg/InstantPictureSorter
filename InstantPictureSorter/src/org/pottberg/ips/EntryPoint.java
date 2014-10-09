@@ -12,7 +12,7 @@ public class EntryPoint extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-	Main root = new Main(primaryStage);
+	Main root = new Main();
 	Scene scene = new Scene(root, 1200, 990);
 
 	primaryStage.setTitle("Instant Picture Sorter");

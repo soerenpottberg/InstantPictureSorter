@@ -134,4 +134,8 @@ public class MockCategory implements Category {
     public void setUserDefinedEndDate(LocalDate userDefinedEndDate) {
 	userDefinedEndDateProperty.set(userDefinedEndDate);
     }
+
+    @Override
+    public void loadImageNames() {
+    }
 }

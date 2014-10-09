@@ -11,6 +11,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import org.pottberg.ips.view.CategoryEditForm?>
 <?import javafx.scene.layout.VBox?>
+<?import org.pottberg.ips.view.CategoryManagement?>
+<?import org.pottberg.ips.view.ImageManagement?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
@@ -19,79 +21,10 @@
 	<center>
 		<SplitPane>
 			<HBox fillHeight="true">
-				<BorderPane>
-					<top>
-						<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
-							<Button text="Open Target Folder " onAction="#openTargetFolderClicked">
-								<tooltip>
-									<Tooltip
-										text="Use to open a folder that acts as a target for the sorting ." />
-								</tooltip>
-							</Button>
-							<ComboBox fx:id="yearsCombobox">
-							</ComboBox>
-						</ToolBar>
-					</top>
-					<left>
-						<ListView fx:id="categoriesListView">
-						</ListView>
-					</left>
-					<center>
-						<ListView fx:id="sortedPicturesListView">
-						</ListView>
-					</center>
-					<right>
-						<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
-					</right>
-					<bottom>
-						<ProgressBar fx:id="sortedPicturesProgressBar">
-						</ProgressBar>
-					</bottom>
-				</BorderPane>
+				<CategoryManagement fx:id="categoryManagement"></CategoryManagement>
 			</HBox>
 			<HBox fillHeight="true">
-				<BorderPane>
-					<top>
-						<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
-							<Button text="Open Unsorted Pictures" onAction="#openFolderOfUnsortedPicturesClicked">
-								<tooltip>
-									<Tooltip
-										text="Use to open a folder containing pictures to be sorted." />
-								</tooltip>
-							</Button>
-							<Button text="Remove" onAction="#removeClicked">
-							</Button>
-						</ToolBar>
-					</top>
-					<left>
-						<ListView fx:id="imageGroupListView">
-						</ListView>
-					</left>
-					<center>
-						<ListView fx:id="unsortedPicturesListView">
-						</ListView>
-					</center>
-					<right>
-						<VBox>
-							<Button text="Select All" onAction="#selectAllClicked">
-								<tooltip>
-									<Tooltip text="Select all pictures of the selected date." />
-								</tooltip>
-							</Button>
-							<Button text="Unselect All" onAction="#unselectAllClicked">
-								<tooltip>
-									<Tooltip text="Unselect all pictures of the selected date." />
-								</tooltip>
-							</Button>
-							<Button text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
-								<tooltip>
-									<Tooltip
-										text="Move all selected pictucres to the selected category." />
-								</tooltip>
-							</Button>
-						</VBox>
-					</right>
-				</BorderPane>
+				<ImageManagement fx:id="imageManagement"></ImageManagement>
 			</HBox>
 		</SplitPane>
 	</center>

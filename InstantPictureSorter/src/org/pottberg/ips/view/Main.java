@@ -4,21 +4,16 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import org.pottberg.ips.controller.MainController;
 
 public class Main extends BorderPane {
 
-    private final MainController controller;
-
-    public Main(Stage primaryStage) {
-	controller = new MainController();
-	controller.setStage(primaryStage);
+    public Main() {
 	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
 	    "Main.fxml"));
 	fxmlLoader.setRoot(this);
-	fxmlLoader.setController(controller);
+	fxmlLoader.setController(new MainController());
 	try {
 	    fxmlLoader.load();
 	} catch (IOException exception) {

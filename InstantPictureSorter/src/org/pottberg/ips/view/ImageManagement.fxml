@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import org.pottberg.ips.view.CategoryEditForm?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
+	<top>
+		<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
+			<Button fx:id="openSourceFolderButton" text="Open Unsorted Pictures"
+				onAction="#openFolderOfUnsortedPicturesClicked">
+				<tooltip>
+					<Tooltip text="Use to open a folder containing pictures to be sorted." />
+				</tooltip>
+			</Button>
+			<Button text="Remove" onAction="#removeClicked">
+			</Button>
+		</ToolBar>
+	</top>
+	<left>
+		<ListView fx:id="imageGroupListView">
+		</ListView>
+	</left>
+	<center>
+		<ListView fx:id="unsortedPicturesListView">
+		</ListView>
+	</center>
+	<right>
+		<VBox>
+			<ComboBox fx:id="yearsCombobox">
+			</ComboBox>
+			<ListView fx:id="categoriesListView">
+			</ListView>
+			<Button text="Select All" onAction="#selectAllClicked">
+				<tooltip>
+					<Tooltip text="Select all pictures of the selected date." />
+				</tooltip>
+			</Button>
+			<Button text="Unselect All" onAction="#unselectAllClicked">
+				<tooltip>
+					<Tooltip text="Unselect all pictures of the selected date." />
+				</tooltip>
+			</Button>
+			<!-- <Button text="Move to Suggested Category" onAction="#moveToSuggestedCategoryClicked"> 
+				<tooltip> <Tooltip text="Move all selected pictucres to the suggested category." 
+				/> </tooltip> </Button> -->
+			<Button text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+				<tooltip>
+					<Tooltip text="Move all selected pictucres to the selected category." />
+				</tooltip>
+			</Button>
+			<!-- <Button text="Move to new Category" onAction="#moveToNewCategoryClicked"> 
+				<tooltip> <Tooltip text="Move all selected pictucres to a new category." 
+				/> </tooltip> </Button> -->
+		</VBox>
+	</right>
+</fx:root>

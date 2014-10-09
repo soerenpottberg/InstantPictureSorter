@@ -8,6 +8,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker.State;
 
@@ -19,7 +20,7 @@ import org.pottberg.ips.model.loader.service.ImageLoaderService;
 public class SimpleCategory implements Category {
 
     private StringProperty nameProperty;
-    private ObservableList<ImageData> imageData;
+    private ObservableList<ImageData> imageDataList;
     private ImageLoaderService imageLoaderService;
     private ImageNameLoader imageNameLoader;
     private CreationDateLoaderService fileAttributeLoaderService;
@@ -32,8 +33,9 @@ public class SimpleCategory implements Category {
     private CategoryNameParser categoryNameParser;
 
     public SimpleCategory(Path dir) {
+	imageDataList = FXCollections.observableArrayList();
 	directoryProperty = new SimpleObjectProperty<>(dir);
-	imageNameLoader = new ImageNameLoader(dir);
+	imageNameLoader = new ImageNameLoader(dir, imageDataList);
 	startDateProperty = new SimpleObjectProperty<>();
 	endDateProperty = new SimpleObjectProperty<>();
 	userDefinedStartDateProperty = new SimpleObjectProperty<>();
@@ -59,7 +61,7 @@ public class SimpleCategory implements Category {
     private void calculateDates() {
 	LocalDate earlierstDate = null;
 	LocalDate lastDate = null;
-	for (ImageData data : imageData) {
+	for (ImageData data : imageDataList) {
 	    if (earlierstDate == null || data.getCreationDate()
 		.isBefore(earlierstDate)) {
 		earlierstDate = data.getCreationDate();
@@ -85,16 +87,11 @@ public class SimpleCategory implements Category {
 
     @Override
     public ObservableList<ImageData> getImageDataList() {
-
-	if (imageData == null) {
-	    calculateImageData();
-	}
-	return imageData;
-
+	return imageDataList;
     }
 
-    private void calculateImageData() {
-
+    @Override
+    public void loadImageNames() {
 	if (imageNameLoader.getState() != State.READY) {
 	    return;
 	}
@@ -104,9 +101,6 @@ public class SimpleCategory implements Category {
 	    startInitialService(fileAttributeLoaderService);
 	});
 	new Thread(imageNameLoader).start();
-
-	imageData = imageNameLoader.getPartialResults();
-
     }
 
     @Override
@@ -133,7 +127,7 @@ public class SimpleCategory implements Category {
 	if (service.getState() != State.READY) {
 	    return;
 	}
-	service.setImageData(imageData);
+	service.setImageData(imageDataList);
 	service.start();
     }
 

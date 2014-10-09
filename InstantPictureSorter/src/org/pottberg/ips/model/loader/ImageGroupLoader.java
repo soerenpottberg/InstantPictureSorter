@@ -42,6 +42,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
     }
 
     private ObservableList<ImageData> createImageData() throws IOException {
+	// TODO use ImageNameLoader
 	ObservableList<ImageData> imageData = FXCollections.observableArrayList();
 	try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir,
 	    "*.{jpg,JPG,jpeg,JPEG}")) {

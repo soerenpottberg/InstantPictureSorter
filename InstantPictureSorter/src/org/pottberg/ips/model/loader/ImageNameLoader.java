@@ -15,13 +15,18 @@ import javafx.concurrent.Task;
 import org.pottberg.ips.model.ImageData;
 
 public class ImageNameLoader extends Task<ObservableList<ImageData>> {
-    private ReadOnlyObjectWrapper<ObservableList<ImageData>> imageData = new ReadOnlyObjectWrapper<>(
-	FXCollections.observableArrayList());
+    private ReadOnlyObjectWrapper<ObservableList<ImageData>> imageData;
 
     private final Path dir;
 
     public ImageNameLoader(Path dir) {
 	this.dir = dir;
+	imageData = new ReadOnlyObjectWrapper<>(FXCollections.observableArrayList());
+    }
+
+    public ImageNameLoader(Path dir, ObservableList<ImageData> imageDataList) {
+	this.dir = dir;
+	imageData = new ReadOnlyObjectWrapper<>(imageDataList);
     }
 
     @Override
