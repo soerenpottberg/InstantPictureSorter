@@ -34,7 +34,7 @@ public class CategoryNameParserTest {
     public void testCategoryNameParserStartDate() {
 	CategoryNameParser categoryNameParser = createCategoryParser("Bar/2014-10-08 - Foo");
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertNull(categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
     }
     
@@ -74,7 +74,7 @@ public class CategoryNameParserTest {
     public void testCategoryNameParserEndDateOneDay() {
 	CategoryNameParser categoryNameParser = createCategoryParser("Bar/2014-10-08 - Foo (1 Tag)");
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertEquals(LocalDate.of(2014, 10, 9), categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
     }
     
@@ -82,7 +82,7 @@ public class CategoryNameParserTest {
     public void testCategoryNameParserEndDateMultipleDays() {
 	CategoryNameParser categoryNameParser = createCategoryParser("Bar/2014-10-08 - Foo (42 Tage)");
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertEquals(LocalDate.of(2014, 11, 19), categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 11, 18), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
     }
     
@@ -98,7 +98,7 @@ public class CategoryNameParserTest {
     public void testCategoryNameParserInvalidEndDate() {
 	CategoryNameParser categoryNameParser = createCategoryParser("Bar/2014-10-08 - Foo (42 Bar)");
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertNull(categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getEndDate());
 	assertEquals("Foo (42 Bar)", categoryNameParser.getName());
     }
     
@@ -108,7 +108,7 @@ public class CategoryNameParserTest {
 	ObjectProperty<Path> pathProperty = createPathProperty("Bar/2014-10-08 - Foo");
 	CategoryNameParser categoryNameParser = createCategoryParser(pathProperty);
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertNull(categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
 	
 	pathProperty.set(Paths.get("Bar/Foo (42 Tage)"));
@@ -120,15 +120,15 @@ public class CategoryNameParserTest {
     @Test
     public void testCategoryNameParserPathRemoveEndDate() {
 	
-	ObjectProperty<Path> pathProperty = createPathProperty("Bar/2014-10-08 - Foo (1 Tag)");
+	ObjectProperty<Path> pathProperty = createPathProperty("Bar/2014-10-08 - Foo (42 Tage)");
 	CategoryNameParser categoryNameParser = createCategoryParser(pathProperty);
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertEquals(LocalDate.of(2014, 10, 9), categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 11, 18), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
 	
 	pathProperty.set(Paths.get("Bar/2014-10-08 - Foo"));
 	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getStartDate());
-	assertNull(categoryNameParser.getEndDate());
+	assertEquals(LocalDate.of(2014, 10, 8), categoryNameParser.getEndDate());
 	assertEquals("Foo", categoryNameParser.getName());
     }
 

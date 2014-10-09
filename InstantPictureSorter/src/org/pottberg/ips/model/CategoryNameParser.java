@@ -73,10 +73,10 @@ public class CategoryNameParser {
 	int openingBracketPosition = remainingName.lastIndexOf(SPACE_WITH_OPENING_BRACKET);
 	int closingBracketPosition = remainingName.lastIndexOf(CLOSING_BRACKED);
 	if (openingBracketPosition == -1 || closingBracketPosition == -1) {
-	    return null;
+	    return 1;
 	}
 	if (closingBracketPosition != getLastLetterPosition(remainingName)) {
-	    return null;
+	    return 1;
 	}
 	String daySubstring = remainingName.substring(openingBracketPosition
 	    + SPACE_WITH_OPENING_BRACKET.length(),
@@ -90,10 +90,10 @@ public class CategoryNameParser {
 	    try {
 		days = Integer.parseInt(daySubstring);
 	    } catch (NumberFormatException e) {
-		return null;
+		return 1;
 	    }
 	} else {
-	    return null;
+	    return 1;
 	}
 	remainingName = remainingName.substring(0, openingBracketPosition);
 	return days;
@@ -127,7 +127,7 @@ public class CategoryNameParser {
 	if (getStartDate() == null || days == null) {
 	    setEndDate(null);
 	} else {
-	    setEndDate(getStartDate().plusDays(days));
+	    setEndDate(getStartDate().plusDays(days).minusDays(1));
 	}
     }
 

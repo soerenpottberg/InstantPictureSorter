@@ -58,7 +58,8 @@ public class CategoryNameBuilder {
 	StringBinding note = createNoteBinding(duration);
 	StringBinding manualNote = createNoteBinding(manualDuration);
 
-	suggestedNameProperty.bind(createNameBinding(startDate, name, note, false));
+	suggestedNameProperty.bind(createNameBinding(startDate, name, note,
+	    false));
 
 	userDefinedNameProperty.bind(createNameBinding(manualStartDate, name,
 	    manualNote, true));
@@ -81,7 +82,7 @@ public class CategoryNameBuilder {
 	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name,
 	StringBinding note, boolean isManual) {
 	String formatString = "yyyy-mm-dd - %s";
-	if(isManual) {
+	if (isManual) {
 	    formatString = "%s";
 	}
 	return when(
@@ -94,22 +95,19 @@ public class CategoryNameBuilder {
     }
 
     private StringBinding createNoteBinding(LongBinding duration) {
-	return when(duration.isEqualTo(0))
+	return when(duration.isEqualTo(1))
 	    .then("")
-	    .otherwise(
-		when(duration.isEqualTo(1))
-		    .then(" (1 Tag)")
-		    .otherwise(
-			format(" (%d Tage)", duration)));
+	    .otherwise(format(" (%d Tage)", duration));
     }
 
     private LongBinding createDurationBinding(
 	ObjectProperty<LocalDate> startDate, ObjectProperty<LocalDate> endDate) {
 	return createLongBinding(() -> {
 	    if (startDate.get() == null || endDate.get() == null) {
-		return 0l;
+		return 1l;
 	    }
-	    return ChronoUnit.DAYS.between(startDate.get(), endDate.get());
+	    return ChronoUnit.DAYS.between(startDate.get(), endDate.get()
+		.plusDays(1));
 	}, startDate, endDate);
     }
 
@@ -128,11 +126,11 @@ public class CategoryNameBuilder {
     public String getSuggestedName() {
 	return suggestedNameProperty.get();
     }
-    
+
     public String getUserDefinedName() {
 	return userDefinedNameProperty.get();
     }
-    
+
     public String getFullYearName() {
 	return fullYearNameProperty.get();
     }
