@@ -94,17 +94,11 @@ public class ImageGroup implements Comparable<ImageGroup> {
     }
 
     private void startService(ImageDataLoaderService service) {
-	switch (service.getState()) {
-	case READY:
-	    service.setImageData(imageData);
-	    service.start();
-	    break;
-	case CANCELLED:
-	    service.restart();
-	    break;
-	default:
-	    break;
+	if (service.getState() == State.SUCCEEDED) {
+	    return;
 	}
+	service.setImageData(imageData);
+	service.restart();
     }
 
     private void stopService(ImageDataLoaderService service) {

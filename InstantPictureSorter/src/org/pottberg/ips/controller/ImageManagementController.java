@@ -128,13 +128,10 @@ public class ImageManagementController extends CategoryBasedController {
 		}
 	    }
 	    return null;
-	}, selectedUnsortedImageData));
+	}, selectedUnsortedImageData, selectedUnsortedImageData));
 
 	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
-	    imageGroupLoaderService.cancel();
-	    imageGroupLoaderService.reset();
-	    imageGroupLoaderService.setDirectory(newPath);
-	    imageGroupLoaderService.start();
+	   imageGroupLoaderService.setDirectory(newPath);
 	    imageGroupLoaderService.setOnSucceeded(workerEvent -> {
 		ObservableList<ImageGroup> imageGroups = imageGroupLoaderService.getValue();
 		for (ImageGroup imageGroup : imageGroups) {
@@ -153,6 +150,7 @@ public class ImageManagementController extends CategoryBasedController {
 		}
 		imageGroupListView.setItems(imageGroups);
 	    });
+	    imageGroupLoaderService.restart();
 	});
 
 	imageGroupListView.setCellFactory(param -> {
@@ -192,17 +190,6 @@ public class ImageManagementController extends CategoryBasedController {
 
 	unsortedPicturesListView.itemsProperty()
 	    .bind(selectedImageGroupImageData);
-
-	suggestedCategoryPreviewLabel.textProperty()
-	    .bind(createStringBinding(() -> {
-		if (suggestedCategoryProperty.get() == null) {
-		    return "No Suggestion";
-		}
-		return suggestedCategoryProperty.get()
-		    .getDirectory()
-		    .getFileName()
-		    .toString();
-	    }, suggestedCategoryProperty));
 
 	suggestedCategoryPreviewLabel.textProperty()
 	    .bind(createStringBinding(() -> {

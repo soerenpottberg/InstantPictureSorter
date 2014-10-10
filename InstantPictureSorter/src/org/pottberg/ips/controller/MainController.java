@@ -37,13 +37,11 @@ public class MainController {
 
 	selectedTargetPathProperty.addListener((observablePath, oldPath,
 	    newPath) -> {
-	    categoryLoaderService.cancel();
-	    categoryLoaderService.reset();
 	    categoryLoaderService.setDirectory(newPath);
-	    categoryLoaderService.start();
 	    categoryLoaderService.setOnSucceeded(workerEvent -> {
 		yearDirectoriesProperty.set(categoryLoaderService.getValue());
 	    });
+	    categoryLoaderService.restart();
 	});
 
 	imageManagement.yearDirectoriesProperty()

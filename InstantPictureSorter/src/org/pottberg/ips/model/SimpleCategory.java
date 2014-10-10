@@ -122,8 +122,8 @@ public class SimpleCategory implements Category {
 	}
 
 	imageNameLoader.setOnSucceeded(event -> {
-	    startInitialService(imageLoaderService);
-	    startInitialService(fileAttributeLoaderService);
+	    startService(imageLoaderService);
+	    startService(fileAttributeLoaderService);
 	});
 	new Thread(imageNameLoader).start();
     }
@@ -148,14 +148,6 @@ public class SimpleCategory implements Category {
 	stopService(fileAttributeLoaderService);
     }
 
-    private void startInitialService(ImageDataLoaderService service) {
-	if (service.getState() != State.READY) {
-	    return;
-	}
-	service.setImageData(imageDataList);
-	service.start();
-    }
-
     private void startService(ImageDataLoaderService service) {
 	if (service == null) {
 	    return;
@@ -163,16 +155,11 @@ public class SimpleCategory implements Category {
 	if (imageNameLoader.getState() != State.SUCCEEDED) {
 	    return;
 	}
-	switch (service.getState()) {
-	case READY:
-	    startInitialService(service);
-	    break;
-	case CANCELLED:
-	    service.restart();
-	    break;
-	default:
-	    break;
+	if (service.getState() == State.SUCCEEDED) {
+	    return;
 	}
+	service.setImageData(imageDataList);
+	service.restart();
     }
 
     private void stopService(ImageDataLoaderService service) {
@@ -256,10 +243,12 @@ public class SimpleCategory implements Category {
 
     @Override
     public boolean containsDate(LocalDate date) {
-	if (date.isBefore(userDefinedStartDateProperty.get())) {
+	if (userDefinedStartDateProperty.get() == null
+	    || date.isBefore(userDefinedStartDateProperty.get())) {
 	    return false;
 	}
-	if (date.isAfter(userDefinedEndDateProperty.get())) {
+	if (userDefinedEndDateProperty.get() == null
+	    || date.isAfter(userDefinedEndDateProperty.get())) {
 	    return false;
 	}
 	return true;
