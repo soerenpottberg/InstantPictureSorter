@@ -147,4 +147,9 @@ public class MockCategory implements Category {
 	return new YearDirectoy(Paths.get(""), year);
     }
 
+    @Override
+    public boolean containsDate(LocalDate date) {
+	return false;
+    }
+
 }

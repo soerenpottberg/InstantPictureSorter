@@ -34,7 +34,8 @@ public class SimpleCategory implements Category {
     private CategoryNameParser categoryNameParser;
     private YearDirectoy yearDirectory;
 
-    private SimpleCategory(YearDirectoy yearDirectory, String name, LocalDate startDate,
+    private SimpleCategory(YearDirectoy yearDirectory, String name,
+	LocalDate startDate,
 	LocalDate endDate, LocalDate userDefinedStartDate,
 	LocalDate userDefinedEndDate) {
 	this.yearDirectory = yearDirectory;
@@ -61,7 +62,8 @@ public class SimpleCategory implements Category {
 	parseDirectory();
     }
 
-    public SimpleCategory(YearDirectoy yearDirectory, String name, LocalDate date) {
+    public SimpleCategory(YearDirectoy yearDirectory, String name,
+	LocalDate date) {
 	this(yearDirectory, name, date, date, date, date);
 	CategoryNameBuilder categoryNameBuilder = new CategoryNameBuilder(this);
 	String completeName = categoryNameBuilder.getSuggestedName();
@@ -185,7 +187,7 @@ public class SimpleCategory implements Category {
 
     @Override
     public ReadOnlyDoubleProperty progressProperty() {
-	if(imageLoaderService == null) {
+	if (imageLoaderService == null) {
 	    return new SimpleDoubleProperty(1);
 	}
 	return imageLoaderService.progressProperty();
@@ -250,5 +252,16 @@ public class SimpleCategory implements Category {
     @Override
     public YearDirectoy getYearDirectory() {
 	return yearDirectory;
+    }
+
+    @Override
+    public boolean containsDate(LocalDate date) {
+	if (date.isBefore(userDefinedStartDateProperty.get())) {
+	    return false;
+	}
+	if (date.isAfter(userDefinedEndDateProperty.get())) {
+	    return false;
+	}
+	return true;
     }
 }

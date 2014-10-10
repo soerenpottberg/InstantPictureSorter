@@ -51,4 +51,6 @@ public interface Category {
     public void loadImageNames();
 
     YearDirectoy getYearDirectory();
+
+    public boolean containsDate(LocalDate date);
 }

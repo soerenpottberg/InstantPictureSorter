@@ -1,5 +1,7 @@
 package org.pottberg.ips.controller;
 
+import static javafx.beans.binding.Bindings.createObjectBinding;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -76,12 +78,32 @@ public class ImageManagementController extends CategoryBasedController {
 	imageGroupLoaderService = new ImageGroupLoaderService();
 	selectedImageGroupProperty = new SimpleObjectProperty<>();
 	selectedUnsortedImageData = FXCollections.observableArrayList();
+	suggestedCategoryProperty = new SimpleObjectProperty<>();
     }
 
     @Override
     @FXML
     protected void initialize() {
 	super.initialize();
+	
+	suggestedCategoryProperty.bind(createObjectBinding(()->{
+	    ImageGroup selectedImageGroup = selectedImageGroupProperty.get();
+	    if(selectedImageGroup == null) {
+		return null;
+	    }
+	    LocalDate creationDate = selectedImageGroup.getCreationDate();
+	    int year = creationDate.getYear();
+	    YearDirectoy yearDirectory = getYearDirectory(year);
+	    if(yearDirectory == null) {
+		return null;
+	    }
+	    for (Category category : yearDirectory.getCategories()) {
+		if(category.containsDate(creationDate)){
+		    return category;
+		}
+	    }
+	    return null;
+	}, selectedUnsortedImageData));
 
 	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
 	    imageGroupLoaderService.cancel();
