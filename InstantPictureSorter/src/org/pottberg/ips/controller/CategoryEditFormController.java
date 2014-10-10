@@ -55,13 +55,13 @@ public class CategoryEditFormController {
     private ToggleGroup dateRangeToggleGroup;
 
     @FXML
-    private RadioButton fullYearRadioButton;
+    private RadioButton fullYearNameRadioButton;
 
     @FXML
-    private RadioButton manualRadioButton;
+    private RadioButton userDefinedNameRadioButton;
 
     @FXML
-    private RadioButton automaticRadioButton;
+    private RadioButton suggestedNameRadioButton;
 
     private ObjectProperty<Category> categoryProperty;
 
@@ -107,7 +107,7 @@ public class CategoryEditFormController {
 
 	categoryProperty.addListener((observableCategory, oldCategory,
 	    newCategory) -> {
-	    dateRangeToggleGroup.selectToggle(automaticRadioButton);
+	    dateRangeToggleGroup.selectToggle(suggestedNameRadioButton);
 	    if (oldCategory != null) {
 		nameTextField.textProperty()
 		    .unbindBidirectional(oldCategory.nameProperty());
@@ -146,11 +146,11 @@ public class CategoryEditFormController {
     }
 
     private void bindNewName(Toggle selectedToggle) {
-	if (selectedToggle == fullYearRadioButton) {
+	if (selectedToggle == fullYearNameRadioButton) {
 	    newName.bind(fullYearNamePreviewLabel.textProperty());
-	} else if (selectedToggle == manualRadioButton) {
+	} else if (selectedToggle == userDefinedNameRadioButton) {
 	    newName.bind(userDefinedNamePreviewLabel.textProperty());
-	} else if (selectedToggle == automaticRadioButton) {
+	} else if (selectedToggle == suggestedNameRadioButton) {
 	    newName.bind(suggestedNamePreviewLabel.textProperty());
 	}
     }

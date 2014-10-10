@@ -28,21 +28,21 @@
 		GridPane.columnSpan="3"></Separator>
 
 	<RadioButton GridPane.rowIndex="2" GridPane.columnIndex="0"
-		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="automaticRadioButton"
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="suggestedNameRadioButton"
 		selected="true">Suggested Name
 	</RadioButton>
 	<Label GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="preview"
 		fx:id="suggestedNamePreviewLabel"></Label>
 
 	<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
-		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="fullYearRadioButton">Full
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="fullYearNameRadioButton">Full
 		Year
 	</RadioButton>
 	<Label GridPane.rowIndex="3" GridPane.columnIndex="2" styleClass="preview"
 		fx:id="fullYearNamePreviewLabel"></Label>
 
 	<RadioButton GridPane.rowIndex="4" GridPane.columnIndex="0"
-		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="manualRadioButton">User
+		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="userDefinedNameRadioButton">User
 		Defined
 	</RadioButton>
 	<Label GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="preview"
