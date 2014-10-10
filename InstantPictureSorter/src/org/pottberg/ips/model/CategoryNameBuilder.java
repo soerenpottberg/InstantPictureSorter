@@ -79,17 +79,17 @@ public class CategoryNameBuilder {
 	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name) {
 	return when(
 	    startDate.isNull())
-	    .then(format("yyyy - %s",
+	    .then(format("[yyyy] %s",
 		name))
 	    .otherwise(
-		format("%1$tY - %2$s",
+		format("[%1$tY] %2$s",
 		    startDate, name));
     }
 
     private StringBinding createNameBinding(
 	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name,
 	StringBinding note, boolean isManual) {
-	String formatString = "yyyy-mm-dd - %s";
+	String formatString = "[yyyy-mm-dd] %s";
 	if (isManual) {
 	    formatString = "%s";
 	}
@@ -98,7 +98,7 @@ public class CategoryNameBuilder {
 	    .then(format(formatString,
 		name))
 	    .otherwise(
-		format("%1$tY-%1$tm-%1$td - %2$s%3$s",
+		format("[%1$tY-%1$tm-%1$td] %2$s%3$s",
 		    startDate, name, note));
     }
 

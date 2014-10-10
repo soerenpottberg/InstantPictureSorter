@@ -17,7 +17,8 @@ public class CategoryNameParser {
 
     private static final String DAYS_WITH_SPACE = " Tage";
     private static final String ONE_DAY = "1 Tag";
-    private static final String DATE_SEPERATOR = " - ";
+    private static final String DATE_PREFIX = "[";
+    private static final String DATE_SEPERATOR = "] ";
     private static final String SPACE_WITH_OPENING_BRACKET = " (";
     private static final String CLOSING_BRACKED = ")";
     private StringProperty nameProperty;
@@ -48,11 +49,15 @@ public class CategoryNameParser {
     }
 
     private LocalDate parseStartDate() {
+	int datePrefixPosition = remainingName.indexOf(DATE_PREFIX);
 	int dateSeperatorPosition = remainingName.indexOf(DATE_SEPERATOR);
-	if (dateSeperatorPosition == -1) {
+	if (datePrefixPosition == -1 || dateSeperatorPosition == -1) {
 	    return null;
 	}
-	String dateString = remainingName.substring(0, dateSeperatorPosition);
+	if (datePrefixPosition != 0) {
+	    return null;
+	}
+	String dateString = remainingName.substring(DATE_PREFIX.length(), dateSeperatorPosition);
 	LocalDate startDate = null;
 	try {
 	    startDate = LocalDate.parse(dateString,
