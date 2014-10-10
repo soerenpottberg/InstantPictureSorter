@@ -49,4 +49,6 @@ public interface Category {
     public void reset();
 
     public void loadImageNames();
+
+    YearDirectoy getYearDirectory();
 }

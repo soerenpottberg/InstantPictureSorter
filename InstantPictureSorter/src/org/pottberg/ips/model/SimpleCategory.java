@@ -32,10 +32,12 @@ public class SimpleCategory implements Category {
     private ObjectProperty<LocalDate> userDefinedEndDateProperty;
     private ObjectProperty<Path> directoryProperty;
     private CategoryNameParser categoryNameParser;
+    private YearDirectoy yearDirectory;
 
-    private SimpleCategory(String name, LocalDate startDate,
+    private SimpleCategory(YearDirectoy yearDirectory, String name, LocalDate startDate,
 	LocalDate endDate, LocalDate userDefinedStartDate,
 	LocalDate userDefinedEndDate) {
+	this.yearDirectory = yearDirectory;
 	imageDataList = FXCollections.observableArrayList();
 	directoryProperty = new SimpleObjectProperty<>();
 	startDateProperty = new SimpleObjectProperty<>(startDate);
@@ -47,9 +49,8 @@ public class SimpleCategory implements Category {
 	nameProperty = new SimpleStringProperty(name);
     }
 
-    public SimpleCategory(Path directory) {
-	this(null, null, null, null, null);
-
+    public SimpleCategory(YearDirectoy yearDirectory, Path directory) {
+	this(yearDirectory, null, null, null, null, null);
 	imageNameLoader = new ImageNameLoader(directory, imageDataList);
 	imageLoaderService = new ImageLoaderService();
 	fileAttributeLoaderService = new CreationDateLoaderService();
@@ -60,20 +61,12 @@ public class SimpleCategory implements Category {
 	parseDirectory();
     }
 
-    public SimpleCategory(Path parentDirectory, String name, LocalDate date) {
-	this(name, date, date, date, date);
+    public SimpleCategory(YearDirectoy yearDirectory, String name, LocalDate date) {
+	this(yearDirectory, name, date, date, date, date);
 	CategoryNameBuilder categoryNameBuilder = new CategoryNameBuilder(this);
 	String completeName = categoryNameBuilder.getSuggestedName();
-	setDirtectoy(parentDirectory.resolve(completeName));
-    }
-    
-    public static Category createNewCategory(String newCategoryName,
-	LocalDate creationDate, YearDirectoy yearDirectory) {
-	Category targetCategory;
 	Path parentDirectory = yearDirectory.getDirectory();
-	targetCategory = new SimpleCategory(parentDirectory,
-	newCategoryName, creationDate);
-	return targetCategory;
+	setDirtectoy(parentDirectory.resolve(completeName));
     }
 
     private void parseDirectory() {
@@ -252,5 +245,10 @@ public class SimpleCategory implements Category {
     @Override
     public void reset() {
 	parseDirectory();
+    }
+
+    @Override
+    public YearDirectoy getYearDirectory() {
+	return yearDirectory;
     }
 }

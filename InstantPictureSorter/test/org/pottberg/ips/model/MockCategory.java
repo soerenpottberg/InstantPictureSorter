@@ -1,6 +1,7 @@
 package org.pottberg.ips.model;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import javafx.beans.property.ObjectProperty;
@@ -18,8 +19,10 @@ public class MockCategory implements Category {
     private ObjectProperty<LocalDate> userDefinedStartDateProperty;
     private ObjectProperty<LocalDate> userDefinedEndDateProperty;
     private ObjectProperty<Path> directoryProperty;
+    private int year;
 
-    public MockCategory() {
+    public MockCategory(int year) {
+	this.year = year;
 	directoryProperty = new SimpleObjectProperty<>();
 	startDateProperty = new SimpleObjectProperty<>();
 	endDateProperty = new SimpleObjectProperty<>();
@@ -137,6 +140,11 @@ public class MockCategory implements Category {
 
     @Override
     public void loadImageNames() {
+    }
+
+    @Override
+    public YearDirectoy getYearDirectory() {
+	return new YearDirectoy(Paths.get(""), year);
     }
 
 }

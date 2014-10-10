@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 
 import javafx.beans.binding.LongBinding;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -56,7 +57,8 @@ public class CategoryNameBuilder {
 
 	ObjectProperty<LocalDate> manualStartDate = newCategory.userDefinedStartDateProperty();
 	ObjectProperty<LocalDate> manualEndDate = newCategory.userDefinedEndDateProperty();
-
+	LocalDate year = LocalDate.ofYearDay(newCategory.getYearDirectory().getYear(), 1);
+	
 	LongBinding duration = createDurationBinding(startDate, endDate);
 	LongBinding manualDuration = createDurationBinding(manualStartDate,
 	    manualEndDate);
@@ -72,20 +74,9 @@ public class CategoryNameBuilder {
 	userDefinedNameProperty.bind(createNameBinding(manualStartDate, name,
 	    manualNote, true));
 
-	fullYearNameProperty.bind(createNameBinding(startDate, name));
+	fullYearNameProperty.bind(format("[%1$tY] %2$s", year, name));
     }
-
-    private StringBinding createNameBinding(
-	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name) {
-	return when(
-	    startDate.isNull())
-	    .then(format("[yyyy] %s",
-		name))
-	    .otherwise(
-		format("[%1$tY] %2$s",
-		    startDate, name));
-    }
-
+    
     private StringBinding createNameBinding(
 	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name,
 	StringBinding note, boolean isManual) {

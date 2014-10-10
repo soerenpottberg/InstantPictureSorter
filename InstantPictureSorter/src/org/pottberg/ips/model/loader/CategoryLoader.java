@@ -41,7 +41,7 @@ public class CategoryLoader extends Task<ObservableList<YearDirectoy>> {
 	return years;
     }
 
-    private void loadCategories(YearDirectoy year, Path yearPath) throws IOException {
+    private void loadCategories(YearDirectoy yearCategory, Path yearPath) throws IOException {
 	try (DirectoryStream<Path> categoryStream = Files.newDirectoryStream(yearPath)) {
 	    for (Path categoryPath : categoryStream) {
 		if (isCancelled()) {
@@ -50,8 +50,8 @@ public class CategoryLoader extends Task<ObservableList<YearDirectoy>> {
 		if (!Files.isDirectory(categoryPath)) {
 		    continue;
 		}
-		Category category = new SimpleCategory(categoryPath);
-		year.addCategory(category);
+		Category category = new SimpleCategory(yearCategory, categoryPath);
+		yearCategory.addCategory(category);
 	    }
 	}
     }

@@ -190,9 +190,8 @@ public class ImageManagementController extends CategoryBasedController {
 		    yearDirectory);
 		createYearDirectoryCommand.execute();
 	    }
-	    targetCategory = SimpleCategory.createNewCategory(newCategoryName,
-		creationDate,
-		yearDirectory);
+	    targetCategory = new SimpleCategory(yearDirectory, newCategoryName,
+		creationDate);
 	    Command createCategoryCommand = new CreateCategoryCommand(null,
 		yearDirectory, targetCategory);
 	    createCategoryCommand.execute();
