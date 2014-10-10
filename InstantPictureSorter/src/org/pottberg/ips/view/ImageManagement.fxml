@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.GridPane?>
 <?import org.pottberg.ips.view.CategoryEditForm?>
+<?import javafx.scene.control.TextField?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
@@ -32,32 +33,74 @@
 		</ListView>
 	</center>
 	<right>
-		<VBox>
-			<ComboBox fx:id="yearsCombobox">
-			</ComboBox>
-			<ListView fx:id="categoriesListView">
-			</ListView>
-			<Button text="Select All" onAction="#selectAllClicked">
+		<GridPane styleClass="gridpane">
+			<fx:define>
+				<ToggleGroup fx:id="categoryToggleGroup"></ToggleGroup>
+			</fx:define>
+
+
+
+			<Button GridPane.rowIndex="0" GridPane.columnIndex="0"
+				text="Select All" onAction="#selectAllClicked">
 				<tooltip>
 					<Tooltip text="Select all pictures of the selected date." />
 				</tooltip>
 			</Button>
-			<Button text="Unselect All" onAction="#unselectAllClicked">
+			<Button GridPane.rowIndex="0" GridPane.columnIndex="1"
+				text="Unselect All" onAction="#unselectAllClicked">
 				<tooltip>
 					<Tooltip text="Unselect all pictures of the selected date." />
 				</tooltip>
 			</Button>
-			<!-- <Button text="Move to Suggested Category" onAction="#moveToSuggestedCategoryClicked"> 
-				<tooltip> <Tooltip text="Move all selected pictucres to the suggested category." 
-				/> </tooltip> </Button> -->
-			<Button text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+
+			<Separator GridPane.rowIndex="1" GridPane.columnIndex="0"
+				GridPane.columnSpan="3"></Separator>
+
+
+			<RadioButton GridPane.rowIndex="2" GridPane.columnIndex="0"
+				GridPane.columnSpan="2" toggleGroup="$categoryToggleGroup" fx:id="suggestedCategoryRadioButton"
+				selected="true">
+				Suggested Category
 				<tooltip>
-					<Tooltip text="Move all selected pictucres to the selected category." />
+					<Tooltip text="Move all selected pictures to the suggested category." />
+				</tooltip>
+			</RadioButton>
+
+			<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
+				GridPane.columnSpan="2" toggleGroup="$categoryToggleGroup" fx:id="newCategoryRadioButton">
+				New Category
+				<tooltip>
+					<Tooltip text="Move all selected pictures to a new category." />
+				</tooltip>
+			</RadioButton>
+			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name: </Label>
+			<TextField GridPane.rowIndex="4" GridPane.columnIndex="2"
+				fx:id="newCategoryNameTextField">
+			</TextField>
+
+			<RadioButton GridPane.rowIndex="5" GridPane.columnIndex="0"
+				GridPane.columnSpan="2" toggleGroup="$categoryToggleGroup" fx:id="userDefinedCategoryRadioButton">
+				User Defined
+				<tooltip>
+					<Tooltip text="Move all selected pictures to the selected category." />
+				</tooltip>
+			</RadioButton>
+			<Label GridPane.rowIndex="6" GridPane.columnIndex="1">Year: </Label>
+			<ComboBox GridPane.rowIndex="6" GridPane.columnIndex="2"
+				fx:id="yearsCombobox">
+			</ComboBox>
+
+			<Label GridPane.rowIndex="7" GridPane.columnIndex="1">Categories: </Label>
+			<ListView GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="2"
+				fx:id="categoriesListView">
+			</ListView>
+
+			<Button GridPane.rowIndex="9" GridPane.columnIndex="0" GridPane.columnSpan="2"
+				text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+				<tooltip>
+					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
 			</Button>
-			<!-- <Button text="Move to new Category" onAction="#moveToNewCategoryClicked"> 
-				<tooltip> <Tooltip text="Move all selected pictucres to a new category." 
-				/> </tooltip> </Button> -->
-		</VBox>
+		</GridPane>
 	</right>
 </fx:root>

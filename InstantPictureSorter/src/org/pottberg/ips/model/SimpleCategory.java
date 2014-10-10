@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -32,27 +33,53 @@ public class SimpleCategory implements Category {
     private ObjectProperty<Path> directoryProperty;
     private CategoryNameParser categoryNameParser;
 
-    public SimpleCategory(Path dir) {
+    private SimpleCategory(String name, LocalDate startDate,
+	LocalDate endDate, LocalDate userDefinedStartDate,
+	LocalDate userDefinedEndDate) {
 	imageDataList = FXCollections.observableArrayList();
-	directoryProperty = new SimpleObjectProperty<>(dir);
-	imageNameLoader = new ImageNameLoader(dir, imageDataList);
-	startDateProperty = new SimpleObjectProperty<>();
-	endDateProperty = new SimpleObjectProperty<>();
-	userDefinedStartDateProperty = new SimpleObjectProperty<>();
-	userDefinedEndDateProperty = new SimpleObjectProperty<>();
-	nameProperty = new SimpleStringProperty();
+	directoryProperty = new SimpleObjectProperty<>();
+	startDateProperty = new SimpleObjectProperty<>(startDate);
+	endDateProperty = new SimpleObjectProperty<>(endDate);
+	userDefinedStartDateProperty = new SimpleObjectProperty<>(
+	    userDefinedStartDate);
+	userDefinedEndDateProperty = new SimpleObjectProperty<>(
+	    userDefinedEndDate);
+	nameProperty = new SimpleStringProperty(name);
+    }
 
-	categoryNameParser = new CategoryNameParser(directoryProperty);
-	parseDirectory();
+    public SimpleCategory(Path directory) {
+	this(null, null, null, null, null);
 
+	imageNameLoader = new ImageNameLoader(directory, imageDataList);
 	imageLoaderService = new ImageLoaderService();
 	fileAttributeLoaderService = new CreationDateLoaderService();
 	fileAttributeLoaderService.setOnSucceeded(event -> {
 	    calculateDates();
 	});
+	setDirtectoy(directory);
+	parseDirectory();
+    }
+
+    public SimpleCategory(Path parentDirectory, String name, LocalDate date) {
+	this(name, date, date, date, date);
+	CategoryNameBuilder categoryNameBuilder = new CategoryNameBuilder(this);
+	String completeName = categoryNameBuilder.getSuggestedName();
+	setDirtectoy(parentDirectory.resolve(completeName));
+    }
+    
+    public static Category createNewCategory(String newCategoryName,
+	LocalDate creationDate, YearDirectoy yearDirectory) {
+	Category targetCategory;
+	Path parentDirectory = yearDirectory.getDirectory();
+	targetCategory = new SimpleCategory(parentDirectory,
+	newCategoryName, creationDate);
+	return targetCategory;
     }
 
     private void parseDirectory() {
+	if (categoryNameParser == null) {
+	    categoryNameParser = new CategoryNameParser(directoryProperty);
+	}
 	nameProperty.set(categoryNameParser.getName());
 	userDefinedStartDateProperty.set(categoryNameParser.getStartDate());
 	userDefinedEndDateProperty.set(categoryNameParser.getEndDate());
@@ -92,6 +119,9 @@ public class SimpleCategory implements Category {
 
     @Override
     public void loadImageNames() {
+	if (imageNameLoader == null) {
+	    return;
+	}
 	if (imageNameLoader.getState() != State.READY) {
 	    return;
 	}
@@ -132,6 +162,9 @@ public class SimpleCategory implements Category {
     }
 
     private void startService(ImageDataLoaderService service) {
+	if (service == null) {
+	    return;
+	}
 	if (imageNameLoader.getState() != State.SUCCEEDED) {
 	    return;
 	}
@@ -148,6 +181,9 @@ public class SimpleCategory implements Category {
     }
 
     private void stopService(ImageDataLoaderService service) {
+	if (service == null) {
+	    return;
+	}
 	if (service.getState() == State.SUCCEEDED) {
 	    return;
 	}
@@ -156,12 +192,15 @@ public class SimpleCategory implements Category {
 
     @Override
     public ReadOnlyDoubleProperty progressProperty() {
+	if(imageLoaderService == null) {
+	    return new SimpleDoubleProperty(1);
+	}
 	return imageLoaderService.progressProperty();
     }
 
     @Override
     public double getProgress() {
-	return imageLoaderService.getProgress();
+	return progressProperty().get();
     }
 
     @Override

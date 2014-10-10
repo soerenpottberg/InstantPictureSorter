@@ -20,18 +20,26 @@ public class CategoryNameBuilder {
     private StringProperty fullYearNameProperty;
     private StringProperty suggestedNameProperty;
     private StringProperty userDefinedNameProperty;
-
-    public CategoryNameBuilder(ObjectProperty<Category> categoryProperty) {
+    
+    private CategoryNameBuilder() {
 	fullYearNameProperty = new SimpleStringProperty();
 	suggestedNameProperty = new SimpleStringProperty();
 	userDefinedNameProperty = new SimpleStringProperty();
+    }
 
+    public CategoryNameBuilder(ObjectProperty<Category> categoryProperty) {
+	this();
 	categoryProperty.addListener((ChangeListener<Category>) (
 	    observableCategory,
 	    oldCategory, newCategory) -> {
 	    build(newCategory);
 	});
 	build(categoryProperty.get());
+    }
+    
+    public CategoryNameBuilder(Category category) {
+	this();
+	build(category);
     }
 
     private void build(Category newCategory) {

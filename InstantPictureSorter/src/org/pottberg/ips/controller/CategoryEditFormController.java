@@ -23,7 +23,7 @@ import javafx.scene.control.ToggleGroup;
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.CategoryNameBuilder;
 import org.pottberg.ips.model.command.Command;
-import org.pottberg.ips.model.command.RenameCategoryCommand;
+import org.pottberg.ips.model.command.RenameCategoryCommand;;
 
 public class CategoryEditFormController {
 

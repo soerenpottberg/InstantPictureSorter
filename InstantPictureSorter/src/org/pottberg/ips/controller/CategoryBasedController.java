@@ -1,5 +1,7 @@
 package org.pottberg.ips.controller;
 
+import java.nio.file.Path;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
@@ -11,54 +13,57 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 
 import org.pottberg.ips.model.Category;
-import org.pottberg.ips.model.Year;
+import org.pottberg.ips.model.YearDirectoy;
 import org.pottberg.ips.view.CategoryListCell;
 
 public abstract class CategoryBasedController {
 
     @FXML
-    protected ComboBox<Year> yearsCombobox;
+    protected ComboBox<YearDirectoy> yearsCombobox;
 
     @FXML
     protected ListView<Category> categoriesListView;
 
-    protected ObjectProperty<ObservableList<Year>> yearListProperty;
+    protected ObjectProperty<Path> selectedTargetPathProperty;
 
-    protected ObjectProperty<Year> selectedYear;
+    protected ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty;
+
+    protected ObjectProperty<YearDirectoy> selectedYearDirectoryProperty;
 
     protected ObjectBinding<ObservableList<Category>> selectedYearCategories;
 
-    protected ObjectProperty<Category> selectedCategory;
+    protected ObjectProperty<Category> selectedCategoryProperty;
 
     public CategoryBasedController() {
-	yearListProperty = new SimpleObjectProperty<>();
-	selectedYear = new SimpleObjectProperty<>();
-	selectedCategory = new SimpleObjectProperty<>();
+	selectedTargetPathProperty = new SimpleObjectProperty<>();
+	yearDirectoriesProperty = new SimpleObjectProperty<>();
+	selectedYearDirectoryProperty = new SimpleObjectProperty<>();
+	selectedCategoryProperty = new SimpleObjectProperty<>();
     }
 
     @FXML
     protected void initialize() {
-	yearListProperty.addListener((observableYearList, oldYearList,
+	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
 	    newYearList) -> {
 	    yearsCombobox.setItems(newYearList);
 	    yearsCombobox.getSelectionModel()
 		.selectLast();
 	});
-	
+
 	categoriesListView.setCellFactory(param -> {
 	    return new CategoryListCell();
 	});
 
-	selectedYear.bind(getSelectedItemProperty(yearsCombobox));
-	selectedCategory.bind(getSelectedItemProperty(categoriesListView));
+	selectedYearDirectoryProperty.bind(getSelectedItemProperty(yearsCombobox));
+	selectedCategoryProperty.bind(getSelectedItemProperty(categoriesListView));
 
 	selectedYearCategories = Bindings.createObjectBinding(() -> {
-	    if (selectedYear.get() == null) {
+	    if (selectedYearDirectoryProperty.get() == null) {
 		return null;
 	    }
-	    return selectedYear.get()
+	    return selectedYearDirectoryProperty.get()
 		.getCategories();
-	}, selectedYear);
+	}, selectedYearDirectoryProperty);
 
 	categoriesListView.itemsProperty()
 	    .bind(selectedYearCategories);
@@ -75,9 +80,13 @@ public abstract class CategoryBasedController {
 	return listView.getSelectionModel()
 	    .selectedItemProperty();
     }
-    
-    public ObjectProperty<ObservableList<Year>> yearListProperty() {
-	return yearListProperty;
+
+    public ObjectProperty<Path> selectedTargetPathProperty() {
+	return selectedTargetPathProperty;
+    }
+
+    public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
+	return yearDirectoriesProperty;
     }
 
 }

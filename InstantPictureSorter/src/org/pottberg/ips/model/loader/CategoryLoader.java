@@ -11,9 +11,9 @@ import javafx.concurrent.Task;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.SimpleCategory;
-import org.pottberg.ips.model.Year;
+import org.pottberg.ips.model.YearDirectoy;
 
-public class CategoryLoader extends Task<ObservableList<Year>> {
+public class CategoryLoader extends Task<ObservableList<YearDirectoy>> {
 
     private final Path dir;
 
@@ -22,15 +22,15 @@ public class CategoryLoader extends Task<ObservableList<Year>> {
     }
 
     @Override
-    protected ObservableList<Year> call() throws Exception {
-	ObservableList<Year> years = FXCollections.observableArrayList();
+    protected ObservableList<YearDirectoy> call() throws Exception {
+	ObservableList<YearDirectoy> years = FXCollections.observableArrayList();
 	try (DirectoryStream<Path> yearStream = Files.newDirectoryStream(dir,
 	    "[0-9][0-9][0-9][0-9]")) {
 	    for (Path yearPath : yearStream) {
 		if (isCancelled()) {
 		    return null;
 		}
-		Year year = new Year(yearPath);
+		YearDirectoy year = new YearDirectoy(yearPath);
 		loadCategories(year, yearPath);
 		if (isCancelled()) {
 		    return null;
@@ -41,7 +41,7 @@ public class CategoryLoader extends Task<ObservableList<Year>> {
 	return years;
     }
 
-    private void loadCategories(Year year, Path yearPath) throws IOException {
+    private void loadCategories(YearDirectoy year, Path yearPath) throws IOException {
 	try (DirectoryStream<Path> categoryStream = Files.newDirectoryStream(yearPath)) {
 	    for (Path categoryPath : categoryStream) {
 		if (isCancelled()) {

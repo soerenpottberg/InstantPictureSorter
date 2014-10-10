@@ -5,25 +5,31 @@ import java.nio.file.Path;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Year {
+public class YearDirectoy {
 
-    private Path entry;
+    private Path directory;
     private int year;
     private ObservableList<Category> categories;
 
-    public Year(Path entry) {
-	this.setEntry(entry);
-	this.setYear(Integer.parseInt(entry.getFileName()
-	    .toString()));
+    public YearDirectoy(Path directory) {
+	this.directory = directory;
+	year = Integer.parseInt(directory.getFileName()
+	    .toString());
 	categories = FXCollections.observableArrayList();
     }
 
-    public Path getEntry() {
-	return entry;
+    public YearDirectoy(Path parentDirectory, int year) {
+	this.directory = parentDirectory.resolve(String.valueOf(year));
+	this.year = year;
+	categories = FXCollections.observableArrayList();
     }
 
-    public void setEntry(Path entry) {
-	this.entry = entry;
+    public Path getDirectory() {
+	return directory;
+    }
+
+    public void setDirectory(Path directory) {
+	this.directory = directory;
     }
 
     public int getYear() {
@@ -43,8 +49,11 @@ public class Year {
 	getCategories().add(category);
     }
 
+    public void removeCategory(Category category) {
+        getCategories().remove(category);
+    }
+
     public ObservableList<Category> getCategories() {
 	return categories;
     }
-
 }

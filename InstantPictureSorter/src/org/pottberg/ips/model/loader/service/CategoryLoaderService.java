@@ -8,10 +8,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-import org.pottberg.ips.model.Year;
+import org.pottberg.ips.model.YearDirectoy;
 import org.pottberg.ips.model.loader.CategoryLoader;
 
-public class CategoryLoaderService extends Service<ObservableList<Year>> {
+public class CategoryLoaderService extends Service<ObservableList<YearDirectoy>> {
 
     protected ObjectProperty<Path> dir = new SimpleObjectProperty<>();
 
@@ -24,7 +24,7 @@ public class CategoryLoaderService extends Service<ObservableList<Year>> {
     }
 
     @Override
-    protected Task<ObservableList<Year>> createTask() {
+    protected Task<ObservableList<YearDirectoy>> createTask() {
 	return new CategoryLoader(dir.get());
     }
 

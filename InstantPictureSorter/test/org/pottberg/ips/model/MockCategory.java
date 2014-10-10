@@ -138,4 +138,5 @@ public class MockCategory implements Category {
     @Override
     public void loadImageNames() {
     }
+
 }

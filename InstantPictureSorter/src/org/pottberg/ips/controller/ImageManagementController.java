@@ -2,6 +2,7 @@ package org.pottberg.ips.controller;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -14,11 +15,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
 
+import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
-import org.pottberg.ips.model.Year;
+import org.pottberg.ips.model.SimpleCategory;
+import org.pottberg.ips.model.YearDirectoy;
+import org.pottberg.ips.model.command.Command;
+import org.pottberg.ips.model.command.CreateCategoryCommand;
+import org.pottberg.ips.model.command.CreateYearDirectoryCommand;
 import org.pottberg.ips.model.command.MoveImagesCommand;
 import org.pottberg.ips.model.loader.service.ImageGroupLoaderService;
 import org.pottberg.ips.view.ImageGroupListCell;
@@ -34,21 +43,38 @@ public class ImageManagementController extends CategoryBasedController {
 
     @FXML
     private ListView<ImageData> unsortedPicturesListView;
-    
+
+    @FXML
+    private ToggleGroup categoryToggleGroup;
+
+    @FXML
+    private RadioButton suggestedCategoryRadioButton;
+
+    @FXML
+    private RadioButton newCategoryRadioButton;
+
+    @FXML
+    private RadioButton userDefinedCategoryRadioButton;
+
+    @FXML
+    private TextField newCategoryNameTextField;
+
     private ObjectProperty<Path> selectedSourcePath;
 
     private ImageGroupLoaderService imageGroupLoaderService;
 
-    private ObjectProperty<ImageGroup> selectedImageGroup;
+    private ObjectProperty<ImageGroup> selectedImageGroupProperty;
 
     private ObjectBinding<ObservableList<ImageData>> selectedImageGroupImageData;
 
     private ObservableList<ImageData> selectedUnsortedImageData;
 
+    private ObjectProperty<Category> suggestedCategoryProperty;
+
     public ImageManagementController() {
 	selectedSourcePath = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
-	selectedImageGroup = new SimpleObjectProperty<>();
+	selectedImageGroupProperty = new SimpleObjectProperty<>();
 	selectedUnsortedImageData = FXCollections.observableArrayList();
     }
 
@@ -56,7 +82,7 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     protected void initialize() {
 	super.initialize();
-	
+
 	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
 	    imageGroupLoaderService.cancel();
 	    imageGroupLoaderService.reset();
@@ -102,17 +128,17 @@ public class ImageManagementController extends CategoryBasedController {
 		    }
 		});
 
-	selectedImageGroup.bind(getSelectedItemProperty(imageGroupListView));
+	selectedImageGroupProperty.bind(getSelectedItemProperty(imageGroupListView));
 
 	selectedImageGroupImageData = Bindings.createObjectBinding(() -> {
-	    if (selectedImageGroup.get() == null) {
+	    if (selectedImageGroupProperty.get() == null) {
 		return null;
 	    }
-	    return selectedImageGroup.get()
+	    return selectedImageGroupProperty.get()
 		.getImageDataList();
-	}, selectedImageGroup);
+	}, selectedImageGroupProperty);
 
-	selectedImageGroup.addListener((observableList, oldList,
+	selectedImageGroupProperty.addListener((observableList, oldList,
 	    newList) -> {
 	    selectedUnsortedImageData.clear();
 	});
@@ -147,15 +173,53 @@ public class ImageManagementController extends CategoryBasedController {
 
     @FXML
     private void moveToSelectedCategoryClicked(ActionEvent event) {
-	if (selectedUnsortedImageData.isEmpty()
-	    || selectedCategory.get() == null) {
+	Category targetCategory = null;
+	if (categoryToggleGroup.getSelectedToggle() == suggestedCategoryRadioButton) {
+	    targetCategory = suggestedCategoryProperty.get();
+	} else if (categoryToggleGroup.getSelectedToggle() == newCategoryRadioButton) {
+	    String newCategoryName = newCategoryNameTextField.getText();
+	    LocalDate creationDate = selectedImageGroupProperty.get()
+		.getCreationDate();
+	    int year = creationDate.getYear();
+	    YearDirectoy yearDirectory = getYearDirectory(year);
+	    if (yearDirectory == null) {
+		Path parentDirectory = selectedTargetPathProperty.get();
+		yearDirectory = new YearDirectoy(parentDirectory, year);
+		Command createYearDirectoryCommand = new CreateYearDirectoryCommand(
+		    null, yearDirectoriesProperty.get(),
+		    yearDirectory);
+		createYearDirectoryCommand.execute();
+	    }
+	    targetCategory = SimpleCategory.createNewCategory(newCategoryName,
+		creationDate,
+		yearDirectory);
+	    Command createCategoryCommand = new CreateCategoryCommand(null,
+		yearDirectory, targetCategory);
+	    createCategoryCommand.execute();
+	} else if (categoryToggleGroup.getSelectedToggle() == userDefinedCategoryRadioButton) {
+	    targetCategory = selectedCategoryProperty.get();
+	}
+
+	if (selectedUnsortedImageData.isEmpty() || targetCategory == null) {
 	    return;
 	}
 	MoveImagesCommand command = new MoveImagesCommand(null,
-	    selectedUnsortedImageData, selectedImageGroup.get(),
-	    selectedCategory.get());
+	    selectedUnsortedImageData, selectedImageGroupProperty.get(),
+	    targetCategory);
 	selectedUnsortedImageData.clear();
 	command.execute();
+    }
+
+    private YearDirectoy getYearDirectory(int year) {
+	if (yearDirectoriesProperty.get() == null) {
+	    return null;
+	}
+	for (YearDirectoy yearDirectory : yearDirectoriesProperty.get()) {
+	    if (yearDirectory.getYear() == year) {
+		return yearDirectory;
+	    }
+	}
+	return null;
     }
 
     @FXML
@@ -167,9 +231,9 @@ public class ImageManagementController extends CategoryBasedController {
     private void unselectAllClicked(ActionEvent event) {
 	selectedUnsortedImageData.clear();
     }
-    
-    public ObjectProperty<ObservableList<Year>> yearListProperty() {
-	return yearListProperty;
+
+    public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
+	return yearDirectoriesProperty;
     }
 
 }

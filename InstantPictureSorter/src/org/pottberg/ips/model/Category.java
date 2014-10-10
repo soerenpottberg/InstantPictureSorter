@@ -48,5 +48,5 @@ public interface Category {
 
     public void reset();
 
-    void loadImageNames();
+    public void loadImageNames();
 }
