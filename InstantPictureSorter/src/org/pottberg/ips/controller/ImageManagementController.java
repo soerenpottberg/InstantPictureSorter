@@ -1,6 +1,8 @@
 package org.pottberg.ips.controller;
 
 import static javafx.beans.binding.Bindings.createObjectBinding;
+import static javafx.beans.binding.Bindings.createStringBinding;
+import static javafx.beans.binding.Bindings.when;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -16,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -23,6 +26,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
 
 import org.pottberg.ips.model.Category;
+import org.pottberg.ips.model.CategoryNameBuilder;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
 import org.pottberg.ips.model.SimpleCategory;
@@ -61,6 +65,18 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     private TextField newCategoryNameTextField;
 
+    @FXML
+    private Label suggestedCategoryPreviewLabel;
+
+    @FXML
+    private Label newCategoryPreviewLabel;
+
+    @FXML
+    private Label userDefinedCategoryPreviewLabel;
+
+    @FXML
+    private Label categoryPreviewLabel;
+
     private ObjectProperty<Path> selectedSourcePath;
 
     private ImageGroupLoaderService imageGroupLoaderService;
@@ -68,6 +84,8 @@ public class ImageManagementController extends CategoryBasedController {
     private ObjectProperty<ImageGroup> selectedImageGroupProperty;
 
     private ObjectBinding<ObservableList<ImageData>> selectedImageGroupImageData;
+
+    private ObjectBinding<LocalDate> selectedImageGroupDate;
 
     private ObservableList<ImageData> selectedUnsortedImageData;
 
@@ -85,20 +103,27 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     protected void initialize() {
 	super.initialize();
-	
-	suggestedCategoryProperty.bind(createObjectBinding(()->{
+
+	selectedImageGroupDate = createObjectBinding(() -> {
 	    ImageGroup selectedImageGroup = selectedImageGroupProperty.get();
-	    if(selectedImageGroup == null) {
+	    if (selectedImageGroup == null) {
 		return null;
 	    }
-	    LocalDate creationDate = selectedImageGroup.getCreationDate();
+	    return selectedImageGroup.getCreationDate();
+	}, selectedImageGroupProperty);
+
+	suggestedCategoryProperty.bind(createObjectBinding(() -> {
+	    if (selectedImageGroupDate.get() == null) {
+		return null;
+	    }
+	    LocalDate creationDate = selectedImageGroupDate.get();
 	    int year = creationDate.getYear();
 	    YearDirectoy yearDirectory = getYearDirectory(year);
-	    if(yearDirectory == null) {
+	    if (yearDirectory == null) {
 		return null;
 	    }
 	    for (Category category : yearDirectory.getCategories()) {
-		if(category.containsDate(creationDate)){
+		if (category.containsDate(creationDate)) {
 		    return category;
 		}
 	    }
@@ -167,6 +192,55 @@ public class ImageManagementController extends CategoryBasedController {
 
 	unsortedPicturesListView.itemsProperty()
 	    .bind(selectedImageGroupImageData);
+
+	suggestedCategoryPreviewLabel.textProperty()
+	    .bind(createStringBinding(() -> {
+		if (suggestedCategoryProperty.get() == null) {
+		    return "No Suggestion";
+		}
+		return suggestedCategoryProperty.get()
+		    .getDirectory()
+		    .getFileName()
+		    .toString();
+	    }, suggestedCategoryProperty));
+
+	suggestedCategoryPreviewLabel.textProperty()
+	    .bind(createStringBinding(() -> {
+		if (suggestedCategoryProperty.get() == null) {
+		    return "No Suggestion";
+		}
+		return suggestedCategoryProperty.get()
+		    .getDirectory()
+		    .getFileName()
+		    .toString();
+	    }, suggestedCategoryProperty));
+
+	newCategoryPreviewLabel.textProperty()
+	    .bind(
+		CategoryNameBuilder.createSuggestedNameBinding(
+		    selectedImageGroupDate,
+		    selectedImageGroupDate,
+		    newCategoryNameTextField.textProperty()));
+
+	userDefinedCategoryPreviewLabel.textProperty()
+	    .bind(createStringBinding(() -> {
+		if (selectedCategoryProperty.get() == null) {
+		    return "No Category Selected";
+		}
+		return selectedCategoryProperty.get()
+		    .getDirectory()
+		    .getFileName()
+		    .toString();
+	    }, selectedCategoryProperty));
+
+	categoryPreviewLabel.textProperty()
+	    .bind(when(categoryToggleGroup.selectedToggleProperty()
+		.isEqualTo(suggestedCategoryRadioButton))
+		.then(suggestedCategoryPreviewLabel.textProperty())
+		.otherwise(when(categoryToggleGroup.selectedToggleProperty()
+		    .isEqualTo(newCategoryRadioButton))
+		    .then(newCategoryPreviewLabel.textProperty())
+		    .otherwise(userDefinedCategoryPreviewLabel.textProperty())));
     }
 
     @FXML

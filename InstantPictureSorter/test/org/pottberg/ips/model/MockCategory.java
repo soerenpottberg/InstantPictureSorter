@@ -151,5 +151,4 @@ public class MockCategory implements Category {
     public boolean containsDate(LocalDate date) {
 	return false;
     }
-
 }

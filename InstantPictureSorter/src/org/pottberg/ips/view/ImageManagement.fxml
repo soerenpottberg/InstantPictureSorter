@@ -65,6 +65,8 @@
 					<Tooltip text="Move all selected pictures to the suggested category." />
 				</tooltip>
 			</RadioButton>
+			<Label GridPane.rowIndex="2" GridPane.columnIndex="2"
+				styleClass="preview" fx:id="suggestedCategoryPreviewLabel"></Label>
 
 			<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
 				GridPane.columnSpan="2" toggleGroup="$categoryToggleGroup" fx:id="newCategoryRadioButton">
@@ -73,6 +75,8 @@
 					<Tooltip text="Move all selected pictures to a new category." />
 				</tooltip>
 			</RadioButton>
+			<Label GridPane.rowIndex="3" GridPane.columnIndex="2"
+				styleClass="preview" fx:id="newCategoryPreviewLabel"></Label>
 			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name: </Label>
 			<TextField GridPane.rowIndex="4" GridPane.columnIndex="2"
 				fx:id="newCategoryNameTextField">
@@ -85,22 +89,27 @@
 					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
 			</RadioButton>
+			<Label GridPane.rowIndex="5" GridPane.columnIndex="2"
+				styleClass="preview" fx:id="userDefinedCategoryPreviewLabel"></Label>
 			<Label GridPane.rowIndex="6" GridPane.columnIndex="1">Year: </Label>
 			<ComboBox GridPane.rowIndex="6" GridPane.columnIndex="2"
 				fx:id="yearsCombobox">
 			</ComboBox>
 
-			<Label GridPane.rowIndex="7" GridPane.columnIndex="1">Categories: </Label>
-			<ListView GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="2"
-				fx:id="categoriesListView">
+			<Label GridPane.rowIndex="7" GridPane.columnIndex="1">Categories:
+			</Label>
+			<ListView GridPane.rowIndex="8" GridPane.columnIndex="1"
+				GridPane.columnSpan="2" fx:id="categoriesListView">
 			</ListView>
 
-			<Button GridPane.rowIndex="9" GridPane.columnIndex="0" GridPane.columnSpan="2"
-				text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+			<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
+				GridPane.columnSpan="2" text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
 				<tooltip>
 					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
 			</Button>
+			<Label GridPane.rowIndex="9" GridPane.columnIndex="2"
+				styleClass="preview" fx:id="categoryPreviewLabel"></Label>
 		</GridPane>
 	</right>
 </fx:root>

@@ -53,4 +53,5 @@ public interface Category {
     YearDirectoy getYearDirectory();
 
     public boolean containsDate(LocalDate date);
+    
 }

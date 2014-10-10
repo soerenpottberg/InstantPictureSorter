@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import javafx.beans.binding.LongBinding;
+import javafx.beans.binding.ObjectExpression;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -77,37 +77,44 @@ public class CategoryNameBuilder {
 	fullYearNameProperty.bind(format("[%1$tY] %2$s", year, name));
     }
     
-    private StringBinding createNameBinding(
-	ObjectProperty<LocalDate> startDate, ReadOnlyStringProperty name,
+    public static StringBinding createSuggestedNameBinding(ObjectExpression<LocalDate> selectedImageGroupDate, ObjectExpression<LocalDate> selectedImageGroupDate2, ReadOnlyStringProperty name) {
+	LongBinding duration = createDurationBinding(selectedImageGroupDate, selectedImageGroupDate2);
+	StringBinding note = createNoteBinding(duration);
+	return createNameBinding(selectedImageGroupDate, name, note,
+	    false);
+    }
+    
+    private static StringBinding createNameBinding(
+	ObjectExpression<LocalDate> selectedImageGroupDate, ReadOnlyStringProperty name,
 	StringBinding note, boolean isManual) {
 	String formatString = "[yyyy-mm-dd] %s";
 	if (isManual) {
 	    formatString = "%s";
 	}
 	return when(
-	    startDate.isNull())
+	    selectedImageGroupDate.isNull())
 	    .then(format(formatString,
 		name))
 	    .otherwise(
 		format("[%1$tY-%1$tm-%1$td] %2$s%3$s",
-		    startDate, name, note));
+		    selectedImageGroupDate, name, note));
     }
 
-    private StringBinding createNoteBinding(LongBinding duration) {
+    private static StringBinding createNoteBinding(LongBinding duration) {
 	return when(duration.isEqualTo(1))
 	    .then("")
 	    .otherwise(format(" (%d Tage)", duration));
     }
 
-    private LongBinding createDurationBinding(
-	ObjectProperty<LocalDate> startDate, ObjectProperty<LocalDate> endDate) {
+    private static LongBinding createDurationBinding(
+	ObjectExpression<LocalDate> selectedImageGroupDate, ObjectExpression<LocalDate> selectedImageGroupDate2) {
 	return createLongBinding(() -> {
-	    if (startDate.get() == null || endDate.get() == null) {
+	    if (selectedImageGroupDate.get() == null || selectedImageGroupDate2.get() == null) {
 		return 1l;
 	    }
-	    return ChronoUnit.DAYS.between(startDate.get(), endDate.get()
+	    return ChronoUnit.DAYS.between(selectedImageGroupDate.get(), selectedImageGroupDate2.get()
 		.plusDays(1));
-	}, startDate, endDate);
+	}, selectedImageGroupDate, selectedImageGroupDate2);
     }
 
     public StringProperty suggestedNameProperty() {
