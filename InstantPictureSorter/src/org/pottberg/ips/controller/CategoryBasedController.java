@@ -46,8 +46,12 @@ public abstract class CategoryBasedController {
 	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
 	    newYearList) -> {
 	    yearsCombobox.setItems(newYearList);
-	    yearsCombobox.getSelectionModel()
-		.selectLast();
+	});
+	
+	selectedYearDirectoryProperty.addListener((observableYearDirectory,
+	    oldYearDirectory, newYearDirectory) -> {
+	    categoriesListView.getSelectionModel()
+		.selectFirst();
 	});
 
 	categoriesListView.setCellFactory(param -> {

@@ -12,6 +12,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -91,6 +92,10 @@ public class ImageManagementController extends CategoryBasedController {
 
     private ObjectProperty<Category> suggestedCategoryProperty;
 
+    private ChangeListener<String> selectNewCategoryListener;
+
+    private ChangeListener<Category> selectUserDefinedCategoryListener;
+
     public ImageManagementController() {
 	selectedSourcePath = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
@@ -103,6 +108,14 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     protected void initialize() {
 	super.initialize();
+
+	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
+	    newYearList) -> {
+	    selectedCategoryProperty.removeListener(selectUserDefinedCategoryListener);
+	    yearsCombobox.getSelectionModel()
+		.selectLast();
+	    selectedCategoryProperty.addListener(selectUserDefinedCategoryListener);
+	});
 
 	selectedImageGroupDate = createObjectBinding(() -> {
 	    ImageGroup selectedImageGroup = selectedImageGroupProperty.get();
@@ -131,7 +144,7 @@ public class ImageManagementController extends CategoryBasedController {
 	}, selectedUnsortedImageData, selectedUnsortedImageData));
 
 	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
-	   imageGroupLoaderService.setDirectory(newPath);
+	    imageGroupLoaderService.setDirectory(newPath);
 	    imageGroupLoaderService.setOnSucceeded(workerEvent -> {
 		ObservableList<ImageGroup> imageGroups = imageGroupLoaderService.getValue();
 		for (ImageGroup imageGroup : imageGroups) {
@@ -167,9 +180,15 @@ public class ImageManagementController extends CategoryBasedController {
 		(observableImageGroup, oldImageGroup, newImageGroup) -> {
 		    if (oldImageGroup != null) {
 			oldImageGroup.stopLoadingImages();
+			newCategoryNameTextField.textProperty()
+			    .removeListener(selectNewCategoryListener);
 		    }
+		    suggestedCategoryRadioButton.setSelected(true);
+		    newCategoryNameTextField.setText("");
 		    if (newImageGroup != null) {
 			newImageGroup.startLoadingImages();
+			newCategoryNameTextField.textProperty()
+			    .addListener(selectNewCategoryListener);
 		    }
 		});
 
@@ -228,6 +247,15 @@ public class ImageManagementController extends CategoryBasedController {
 		    .isEqualTo(newCategoryRadioButton))
 		    .then(newCategoryPreviewLabel.textProperty())
 		    .otherwise(userDefinedCategoryPreviewLabel.textProperty())));
+
+	selectNewCategoryListener = (observableText, oldText, newText) -> {
+	    newCategoryRadioButton.setSelected(true);
+	};
+
+	selectUserDefinedCategoryListener = (observableCategory, oldCategory,
+	    newCategory) -> {
+	    userDefinedCategoryRadioButton.setSelected(true);
+	};
     }
 
     @FXML

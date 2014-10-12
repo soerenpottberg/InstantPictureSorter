@@ -23,7 +23,7 @@ import javafx.scene.control.ToggleGroup;
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.CategoryNameBuilder;
 import org.pottberg.ips.model.command.Command;
-import org.pottberg.ips.model.command.RenameCategoryCommand;;
+import org.pottberg.ips.model.command.RenameCategoryCommand;
 
 public class CategoryEditFormController {
 
@@ -69,6 +69,8 @@ public class CategoryEditFormController {
 
     private CategoryNameBuilder categoryNameBuilder;
 
+    private ChangeListener<LocalDate> selectUserDefinedNameListener;
+
     public CategoryEditFormController() {
 	categoryProperty = new SimpleObjectProperty<>();
 	newName = new SimpleStringProperty();
@@ -77,7 +79,7 @@ public class CategoryEditFormController {
 
     @FXML
     private void initialize() {
-
+	
 	suggestedNamePreviewLabel.textProperty()
 	    .bind(categoryNameBuilder.suggestedNameProperty());
 	userDefinedNamePreviewLabel.textProperty()
@@ -86,7 +88,7 @@ public class CategoryEditFormController {
 	    .bind(categoryNameBuilder.fullYearNameProperty());
 	namePreviewLabel.textProperty()
 	    .bind(newName);
-
+	
 	endDatePicker.setDayCellFactory(datePicker -> {
 	    return new DateCell() {
 		@Override
@@ -105,16 +107,26 @@ public class CategoryEditFormController {
 	    };
 	});
 
+	selectUserDefinedNameListener = (observableDate, oldDate, newDate) -> {
+	    userDefinedNameRadioButton.setSelected(true);
+	};
+
 	categoryProperty.addListener((observableCategory, oldCategory,
 	    newCategory) -> {
 	    dateRangeToggleGroup.selectToggle(suggestedNameRadioButton);
 	    if (oldCategory != null) {
+		startDatePicker.valueProperty()
+		    .removeListener(selectUserDefinedNameListener);
+		endDatePicker.valueProperty()
+		    .removeListener(selectUserDefinedNameListener);
 		nameTextField.textProperty()
 		    .unbindBidirectional(oldCategory.nameProperty());
 		startDatePicker.valueProperty()
-		    .unbindBidirectional(oldCategory.userDefinedStartDateProperty());
+		    .unbindBidirectional(
+			oldCategory.userDefinedStartDateProperty());
 		endDatePicker.valueProperty()
-		    .unbindBidirectional(oldCategory.userDefinedEndDateProperty());
+		    .unbindBidirectional(
+			oldCategory.userDefinedEndDateProperty());
 		currentPathLabel.textProperty()
 		    .unbind();
 	    }
@@ -122,13 +134,18 @@ public class CategoryEditFormController {
 		nameTextField.textProperty()
 		    .bindBidirectional(newCategory.nameProperty());
 		startDatePicker.valueProperty()
-		    .bindBidirectional(newCategory.userDefinedStartDateProperty());
+		    .bindBidirectional(
+			newCategory.userDefinedStartDateProperty());
 		endDatePicker.valueProperty()
 		    .bindBidirectional(newCategory.userDefinedEndDateProperty());
 		currentPathLabel.textProperty()
 		    .bind(createStringBinding(() -> {
 			return newCategory.getDirectoryName();
 		    }, newCategory.directoryProperty()));
+		startDatePicker.valueProperty()
+		    .addListener(selectUserDefinedNameListener);
+		endDatePicker.valueProperty()
+		    .addListener(selectUserDefinedNameListener);
 	    }
 	});
 
@@ -179,7 +196,8 @@ public class CategoryEditFormController {
 	    return;
 	}
 	String newName = getNewName();
-	Command command = new RenameCategoryCommand(null, category, Paths.get(newName));
+	Command command = new RenameCategoryCommand(null, category,
+	    Paths.get(newName));
 	command.execute();
     }
 
