@@ -16,7 +16,7 @@ import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.YearDirectoy;
 import org.pottberg.ips.view.CategoryListCell;
 
-public abstract class CategoryBasedController {
+public abstract class CategoryBasedController implements Controller {
 
     @FXML
     protected ComboBox<YearDirectoy> yearsCombobox;
@@ -33,6 +33,8 @@ public abstract class CategoryBasedController {
     protected ObjectBinding<ObservableList<Category>> selectedYearCategories;
 
     protected ObjectProperty<Category> selectedCategoryProperty;
+
+    protected MainController mainController;
 
     public CategoryBasedController() {
 	selectedTargetPathProperty = new SimpleObjectProperty<>();
@@ -91,6 +93,10 @@ public abstract class CategoryBasedController {
 
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
+    }
+
+    public void setMainController(MainController mainController) {
+	this.mainController = mainController;
     }
 
 }

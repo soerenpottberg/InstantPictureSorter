@@ -94,8 +94,6 @@ public class ImageManagementController extends CategoryBasedController {
 
     private ChangeListener<Category> selectUserDefinedCategoryListener;
 
-    private MainController mainController;
-
     public ImageManagementController() {
 	selectedSourcePathProperty = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
@@ -335,10 +333,6 @@ public class ImageManagementController extends CategoryBasedController {
 
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
-    }
-
-    public void setMainController(MainController mainController) {
-	this.mainController = mainController;	
     }
 
     public ObjectProperty<Path> selectedSourcePathProperty() {

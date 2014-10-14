@@ -1,27 +1,18 @@
 package org.pottberg.ips.view;
 
-import java.io.IOException;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.BorderPane;
-
+import org.pottberg.ips.controller.Controller;
 import org.pottberg.ips.controller.MainController;
 
-public class Main extends BorderPane {
-
+public class Main extends View {
+    
     private MainController controller;
 
-    public Main() {
-	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-	    "Main.fxml"));
-	fxmlLoader.setRoot(this);
-	controller = new MainController(this);
-	fxmlLoader.setController(controller);
-	try {
-	    fxmlLoader.load();
-	} catch (IOException exception) {
-	    throw new RuntimeException(exception);
+    @Override
+    protected Controller getController() {
+	if(controller == null) {
+	    controller = new MainController(this);
 	}
-    }
+	return controller;
+    }   
 
 }

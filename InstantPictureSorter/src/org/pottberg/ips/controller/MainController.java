@@ -18,7 +18,7 @@ import org.pottberg.ips.view.CategoryManagement;
 import org.pottberg.ips.view.ImageManagement;
 import org.pottberg.ips.view.Main;
 
-public class MainController {
+public class MainController implements Controller {
 
     @FXML
     private CategoryManagement categoryManagement;

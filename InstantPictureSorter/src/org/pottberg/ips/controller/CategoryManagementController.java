@@ -39,8 +39,6 @@ public class CategoryManagementController extends CategoryBasedController {
 
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
 
-    private MainController mainController;
-
     @FXML
     protected void initialize() {
 	super.initialize();
@@ -95,10 +93,6 @@ public class CategoryManagementController extends CategoryBasedController {
     
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
-    }
-
-    public void setMainController(MainController mainController) {
-	this.mainController = mainController;	
     }
 
 }
