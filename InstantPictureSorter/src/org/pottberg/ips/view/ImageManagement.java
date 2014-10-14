@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 
 import org.pottberg.ips.controller.ImageManagementController;
+import org.pottberg.ips.controller.MainController;
 import org.pottberg.ips.model.YearDirectoy;
 
 public class ImageManagement extends BorderPane {
@@ -34,6 +35,14 @@ public class ImageManagement extends BorderPane {
     
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return controller.yearDirectoriesProperty();
+    }
+
+    public void setMainController(MainController mainController) {
+	controller.setMainController(mainController);
+    }
+
+    public ObjectProperty<Path> selectedSourcePathProperty() {
+	return controller.selectedSourcePathProperty();
     }
     
 }

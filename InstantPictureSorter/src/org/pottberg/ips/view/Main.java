@@ -15,7 +15,7 @@ public class Main extends BorderPane {
 	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
 	    "Main.fxml"));
 	fxmlLoader.setRoot(this);
-	controller = new MainController();
+	controller = new MainController(this);
 	fxmlLoader.setController(controller);
 	try {
 	    fxmlLoader.load();

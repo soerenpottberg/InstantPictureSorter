@@ -1,7 +1,5 @@
 package org.pottberg.ips.controller;
 
-import java.io.File;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
@@ -12,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
-import javafx.stage.DirectoryChooser;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
@@ -41,6 +38,8 @@ public class CategoryManagementController extends CategoryBasedController {
     private CategoryEditForm categoryEditForm;
 
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
+
+    private MainController mainController;
 
     @FXML
     protected void initialize() {
@@ -90,21 +89,16 @@ public class CategoryManagementController extends CategoryBasedController {
     }
 
     @FXML
-    private void openTargetFolderClicked(ActionEvent event) {
-	final DirectoryChooser directoryChooser = new DirectoryChooser();
-	final File selectedDirectory = directoryChooser
-	    .showDialog(openTargetFolderButton.getScene()
-		.getWindow());
-
-	if (selectedDirectory == null) {
-	    return;
-	}
-
-	selectedTargetPathProperty.set(selectedDirectory.toPath());
+    private void openTargetDirectoryClicked(ActionEvent event) {
+	mainController.openTargetDirectoryClicked(event);
     }
     
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
+    }
+
+    public void setMainController(MainController mainController) {
+	this.mainController = mainController;	
     }
 
 }

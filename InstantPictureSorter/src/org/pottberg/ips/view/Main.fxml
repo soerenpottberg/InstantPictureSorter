@@ -13,11 +13,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.pottberg.ips.view.CategoryManagement?>
 <?import org.pottberg.ips.view.ImageManagement?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
 		<URL value="@application.css" />
 	</stylesheets>
+	<top>
+		<MenuBar>
+			<Menu text="File">
+				<MenuItem text="Open Target Folder " onAction="#openTargetDirectoryClicked" />
+				<MenuItem text="Open Unsorted Pictures " onAction="#openSourceDirectoryClicked" />
+				<SeparatorMenuItem />
+				<MenuItem text="Exit" onAction="#onExitClicked" />
+			</Menu>
+		</MenuBar>
+	</top>
 	<center>
 		<SplitPane>
 			<HBox fillHeight="true">

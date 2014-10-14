@@ -4,7 +4,6 @@ import static javafx.beans.binding.Bindings.createObjectBinding;
 import static javafx.beans.binding.Bindings.createStringBinding;
 import static javafx.beans.binding.Bindings.when;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
@@ -24,7 +23,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.stage.DirectoryChooser;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.CategoryNameBuilder;
@@ -78,7 +76,7 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     private Label categoryPreviewLabel;
 
-    private ObjectProperty<Path> selectedSourcePath;
+    private ObjectProperty<Path> selectedSourcePathProperty;
 
     private ImageGroupLoaderService imageGroupLoaderService;
 
@@ -96,8 +94,10 @@ public class ImageManagementController extends CategoryBasedController {
 
     private ChangeListener<Category> selectUserDefinedCategoryListener;
 
+    private MainController mainController;
+
     public ImageManagementController() {
-	selectedSourcePath = new SimpleObjectProperty<>();
+	selectedSourcePathProperty = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
 	selectedImageGroupProperty = new SimpleObjectProperty<>();
 	selectedUnsortedImageData = FXCollections.observableArrayList();
@@ -143,7 +143,7 @@ public class ImageManagementController extends CategoryBasedController {
 	    return null;
 	}, selectedUnsortedImageData, selectedUnsortedImageData));
 
-	selectedSourcePath.addListener((observablePath, oldPath, newPath) -> {
+	selectedSourcePathProperty.addListener((observablePath, oldPath, newPath) -> {
 	    imageGroupLoaderService.setDirectory(newPath);
 	    imageGroupLoaderService.setOnSucceeded(workerEvent -> {
 		ObservableList<ImageGroup> imageGroups = imageGroupLoaderService.getValue();
@@ -259,17 +259,8 @@ public class ImageManagementController extends CategoryBasedController {
     }
 
     @FXML
-    private void openFolderOfUnsortedPicturesClicked(ActionEvent event) {
-	final DirectoryChooser directoryChooser = new DirectoryChooser();
-	final File selectedDirectory = directoryChooser
-	    .showDialog(openSourceFolderButton.getScene()
-		.getWindow());
-
-	if (selectedDirectory == null) {
-	    return;
-	}
-
-	selectedSourcePath.set(selectedDirectory.toPath());
+    private void openSourceDirectoryClicked(ActionEvent event) {
+	mainController.openSourceDirectoryClicked(event);
     }
 
     @FXML
@@ -344,6 +335,14 @@ public class ImageManagementController extends CategoryBasedController {
 
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
+    }
+
+    public void setMainController(MainController mainController) {
+	this.mainController = mainController;	
+    }
+
+    public ObjectProperty<Path> selectedSourcePathProperty() {
+	return selectedSourcePathProperty;
     }
 
 }

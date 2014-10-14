@@ -12,8 +12,8 @@
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
-		<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
-			<Button fx:id="openTargetFolderButton" text="Open Target Folder " onAction="#openTargetFolderClicked">
+		<ToolBar>
+			<Button fx:id="openTargetFolderButton" text="Open Target Folder " onAction="#openTargetDirectoryClicked">
 				<tooltip>
 					<Tooltip
 						text="Use to open a folder that acts as a target for the sorting ." />

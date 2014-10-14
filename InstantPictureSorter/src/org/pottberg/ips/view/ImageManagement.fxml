@@ -15,7 +15,7 @@
 	<top>
 		<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
 			<Button fx:id="openSourceFolderButton" text="Open Unsorted Pictures"
-				onAction="#openFolderOfUnsortedPicturesClicked">
+				onAction="#openSourceDirectoryClicked">
 				<tooltip>
 					<Tooltip text="Use to open a folder containing pictures to be sorted." />
 				</tooltip>
