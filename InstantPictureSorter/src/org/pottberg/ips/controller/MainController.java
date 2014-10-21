@@ -108,6 +108,9 @@ public class MainController implements Controller {
 	directoryChooser.setTitle(title);
 	final File selectedDirectory = directoryChooser
 	    .showDialog(getRootWindow());
+	if(selectedDirectory == null) {
+	    return null;
+	}
 	return selectedDirectory.toPath();
     }
     
