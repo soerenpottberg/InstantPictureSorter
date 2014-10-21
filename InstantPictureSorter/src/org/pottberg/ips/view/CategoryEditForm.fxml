@@ -22,7 +22,7 @@
 
 	<Label GridPane.rowIndex="0" GridPane.columnIndex="0">Name: </Label>
 	<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
-		GridPane.columnSpan="2" fx:id="nameTextField"></TextField>
+		GridPane.columnSpan="2" fx:id="nameTextField" promptText="Enter a name for the category"></TextField>
 
 	<Separator GridPane.rowIndex="1" GridPane.columnIndex="0"
 		GridPane.columnSpan="3"></Separator>

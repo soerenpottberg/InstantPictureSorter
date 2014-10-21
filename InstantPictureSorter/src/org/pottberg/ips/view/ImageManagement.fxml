@@ -79,7 +79,7 @@
 				styleClass="preview" fx:id="newCategoryPreviewLabel"></Label>
 			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name: </Label>
 			<TextField GridPane.rowIndex="4" GridPane.columnIndex="2"
-				fx:id="newCategoryNameTextField">
+				fx:id="newCategoryNameTextField" promptText="Enter a name for the category">
 			</TextField>
 
 			<RadioButton GridPane.rowIndex="5" GridPane.columnIndex="0"
