@@ -6,14 +6,12 @@ import java.nio.file.Files;
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.YearDirectoy;
 
-public class CreateCategoryCommand extends Command {
+public class CreateCategoryCommand extends SimpleCommand {
 
     private YearDirectoy yearDirectory;
     private Category category;
 
-    public CreateCategoryCommand(Command previousCommand,
-	YearDirectoy yearDirectory, Category category) {
-	super(previousCommand);
+    public CreateCategoryCommand(YearDirectoy yearDirectory, Category category) {
 	this.yearDirectory = yearDirectory;
 	this.category = category;
     }
@@ -36,6 +34,11 @@ public class CreateCategoryCommand extends Command {
     @Override
     protected void revertFileSystem() throws IOException {
 	Files.delete(category.getDirectory());
+    }
+
+    @Override
+    public String getName() {
+	return String.format("Create Category \"%s\"", category.getName());
     }
 
 }

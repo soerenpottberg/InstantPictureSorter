@@ -7,14 +7,13 @@ import javafx.collections.ObservableList;
 
 import org.pottberg.ips.model.YearDirectoy;
 
-public class CreateYearDirectoryCommand extends Command{
+public class CreateYearDirectoryCommand extends SimpleCommand{
 
     
     private ObservableList<YearDirectoy> yearDirectories;
     private YearDirectoy yearDirectory;
 
-    public CreateYearDirectoryCommand(Command previousCommand, ObservableList<YearDirectoy> yearDirectories, YearDirectoy yearDirectory) {
-	super(previousCommand);
+    public CreateYearDirectoryCommand(ObservableList<YearDirectoy> yearDirectories, YearDirectoy yearDirectory) {
 	this.yearDirectories = yearDirectories;
 	this.yearDirectory = yearDirectory;	
     }
@@ -37,6 +36,11 @@ public class CreateYearDirectoryCommand extends Command{
     @Override
     protected void revertFileSystem() throws IOException {
 	Files.delete(yearDirectory.getDirectory());
+    }
+    
+    @Override
+    public String getName() {
+	return String.format("Create Year Directory \"%s\"", yearDirectory);
     }
 
 }

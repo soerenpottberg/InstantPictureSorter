@@ -25,10 +25,14 @@
 	<top>
 		<MenuBar>
 			<Menu text="File">
-				<MenuItem text="Open Target Folder " onAction="#openTargetDirectoryClicked" />
-				<MenuItem text="Open Unsorted Pictures " onAction="#openSourceDirectoryClicked" />
+				<MenuItem text="Open Target Folder" onAction="#openTargetDirectoryClicked" />
+				<MenuItem text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked" />
 				<SeparatorMenuItem />
 				<MenuItem text="Exit" onAction="#onExitClicked" />
+			</Menu>
+			<Menu text="Edit">
+				<MenuItem text="Undo" onAction="#undoClicked" />
+				<MenuItem text="Redo" onAction="#redoClicked" />
 			</Menu>
 		</MenuBar>
 	</top>

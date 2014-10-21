@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 
 import org.pottberg.ips.controller.CategoryEditFormController;
+import org.pottberg.ips.controller.MainController;
 import org.pottberg.ips.model.Category;
 
 public class CategoryEditForm extends GridPane {
@@ -28,6 +29,10 @@ public class CategoryEditForm extends GridPane {
 
     public ObjectProperty<Category> categoryProperty() {
 	return controller.categoryProperty();
+    }
+
+    public void setMainController(MainController mainController) {
+	controller.setMainController(mainController);
     }
 
 }

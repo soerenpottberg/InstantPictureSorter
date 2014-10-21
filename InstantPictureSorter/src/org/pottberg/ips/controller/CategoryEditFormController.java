@@ -71,6 +71,8 @@ public class CategoryEditFormController {
 
     private ChangeListener<LocalDate> selectUserDefinedNameListener;
 
+    private MainController mainController;
+
     public CategoryEditFormController() {
 	categoryProperty = new SimpleObjectProperty<>();
 	newName = new SimpleStringProperty();
@@ -79,7 +81,7 @@ public class CategoryEditFormController {
 
     @FXML
     private void initialize() {
-	
+
 	suggestedNamePreviewLabel.textProperty()
 	    .bind(categoryNameBuilder.suggestedNameProperty());
 	userDefinedNamePreviewLabel.textProperty()
@@ -88,7 +90,7 @@ public class CategoryEditFormController {
 	    .bind(categoryNameBuilder.fullYearNameProperty());
 	namePreviewLabel.textProperty()
 	    .bind(newName);
-	
+
 	endDatePicker.setDayCellFactory(datePicker -> {
 	    return new DateCell() {
 		@Override
@@ -196,9 +198,10 @@ public class CategoryEditFormController {
 	    return;
 	}
 	String newName = getNewName();
-	Command command = new RenameCategoryCommand(null, category,
+	Command command = new RenameCategoryCommand(category,
 	    Paths.get(newName));
-	command.execute();
+	mainController.getCommandExecutor()
+	    .execute(command);
     }
 
     @FXML
@@ -220,6 +223,10 @@ public class CategoryEditFormController {
 
     public ObjectProperty<Category> categoryProperty() {
 	return categoryProperty;
+    }
+
+    public void setMainController(MainController mainController) {
+	this.mainController = mainController;
     }
 
 }

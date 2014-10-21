@@ -42,17 +42,17 @@ public class CategoryManagementController extends CategoryBasedController {
     @FXML
     protected void initialize() {
 	super.initialize();
-	
+
 	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
 	    newYearList) -> {
 	    yearsCombobox.getSelectionModel()
 		.selectLast();
 	});
-	
+
 	sortedPicturesListView.setCellFactory(param -> {
 	    return new AttributedImageListCell();
 	});
-	
+
 	categoryEditForm.categoryProperty()
 	    .bind(categoriesListView.getSelectionModel()
 		.selectedItemProperty());
@@ -90,9 +90,14 @@ public class CategoryManagementController extends CategoryBasedController {
     private void openTargetDirectoryClicked(ActionEvent event) {
 	mainController.openTargetDirectoryClicked(event);
     }
-    
+
     public ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty() {
 	return yearDirectoriesProperty;
     }
 
+    @Override
+    public void setMainController(MainController mainController) {
+	super.setMainController(mainController);
+	categoryEditForm.setMainController(mainController);
+    }
 }

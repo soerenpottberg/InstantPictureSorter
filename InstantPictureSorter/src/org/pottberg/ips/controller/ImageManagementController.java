@@ -31,6 +31,7 @@ import org.pottberg.ips.model.ImageGroup;
 import org.pottberg.ips.model.SimpleCategory;
 import org.pottberg.ips.model.YearDirectoy;
 import org.pottberg.ips.model.command.Command;
+import org.pottberg.ips.model.command.ComplexCommand;
 import org.pottberg.ips.model.command.CreateCategoryCommand;
 import org.pottberg.ips.model.command.CreateYearDirectoryCommand;
 import org.pottberg.ips.model.command.MoveImagesCommand;
@@ -141,7 +142,8 @@ public class ImageManagementController extends CategoryBasedController {
 	    return null;
 	}, selectedUnsortedImageData, selectedUnsortedImageData));
 
-	selectedSourcePathProperty.addListener((observablePath, oldPath, newPath) -> {
+	selectedSourcePathProperty.addListener((observablePath, oldPath,
+	    newPath) -> {
 	    imageGroupLoaderService.setDirectory(newPath);
 	    imageGroupLoaderService.setOnSucceeded(workerEvent -> {
 		ObservableList<ImageGroup> imageGroups = imageGroupLoaderService.getValue();
@@ -274,6 +276,8 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     private void moveToSelectedCategoryClicked(ActionEvent event) {
 	Category targetCategory = null;
+	Command createYearDirectoryCommand = null;
+	Command createCategoryCommand = null;
 	if (categoryToggleGroup.getSelectedToggle() == suggestedCategoryRadioButton) {
 	    targetCategory = suggestedCategoryProperty.get();
 	} else if (categoryToggleGroup.getSelectedToggle() == newCategoryRadioButton) {
@@ -285,16 +289,14 @@ public class ImageManagementController extends CategoryBasedController {
 	    if (yearDirectory == null) {
 		Path parentDirectory = selectedTargetPathProperty.get();
 		yearDirectory = new YearDirectoy(parentDirectory, year);
-		Command createYearDirectoryCommand = new CreateYearDirectoryCommand(
-		    null, yearDirectoriesProperty.get(),
+		createYearDirectoryCommand = new CreateYearDirectoryCommand(
+		    yearDirectoriesProperty.get(),
 		    yearDirectory);
-		createYearDirectoryCommand.execute();
 	    }
 	    targetCategory = new SimpleCategory(yearDirectory, newCategoryName,
 		creationDate);
-	    Command createCategoryCommand = new CreateCategoryCommand(null,
+	    createCategoryCommand = new CreateCategoryCommand(
 		yearDirectory, targetCategory);
-	    createCategoryCommand.execute();
 	} else if (categoryToggleGroup.getSelectedToggle() == userDefinedCategoryRadioButton) {
 	    targetCategory = selectedCategoryProperty.get();
 	}
@@ -302,11 +304,32 @@ public class ImageManagementController extends CategoryBasedController {
 	if (selectedUnsortedImageData.isEmpty() || targetCategory == null) {
 	    return;
 	}
-	MoveImagesCommand command = new MoveImagesCommand(null,
+	MoveImagesCommand moveImagemsCommand = new MoveImagesCommand(null,
 	    selectedUnsortedImageData, selectedImageGroupProperty.get(),
 	    targetCategory);
 	selectedUnsortedImageData.clear();
-	command.execute();
+
+	if (createCategoryCommand != null || createYearDirectoryCommand != null) {
+	    ComplexCommand complexCommand = new ComplexCommand() {
+
+		@Override
+		public String getName() {
+		    return moveImagemsCommand.getName();
+		}
+	    };
+	    if(createYearDirectoryCommand != null) {
+		complexCommand.addCommand(createYearDirectoryCommand);
+	    }
+	    if(createCategoryCommand != null) {
+		complexCommand.addCommand(createCategoryCommand);
+	    }
+	    complexCommand.addCommand(moveImagemsCommand);
+	    mainController.getCommandExecutor()
+	    .execute(complexCommand);
+	} else {
+	mainController.getCommandExecutor()
+	    .execute(moveImagemsCommand);
+	}
     }
 
     private YearDirectoy getYearDirectory(int year) {

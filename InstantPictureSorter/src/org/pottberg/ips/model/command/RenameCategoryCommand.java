@@ -6,23 +6,22 @@ import java.nio.file.Path;
 
 import org.pottberg.ips.model.Category;
 
-public class RenameCategoryCommand extends Command{
+public class RenameCategoryCommand extends SimpleCommand {
 
     private Category category;
     private Path newDirectoy;
     private Path oldDirectory;
 
-    public RenameCategoryCommand(Command previousCommand, Category category, Path newName) {
-	super(previousCommand);
+    public RenameCategoryCommand(Category category, Path newName) {
 	this.category = category;
 	oldDirectory = category.getDirectory();
 	Path parentDirectory = oldDirectory.getParent();
-        newDirectoy = parentDirectory.resolve(newName);	
+	newDirectoy = parentDirectory.resolve(newName);
     }
 
     @Override
     protected void updateApplicationState() {
-	 category.setDirtectoy(newDirectoy);
+	category.setDirtectoy(newDirectoy);
     }
 
     @Override
@@ -38,6 +37,12 @@ public class RenameCategoryCommand extends Command{
     @Override
     protected void revertFileSystem() throws IOException {
 	Files.move(newDirectoy, oldDirectory);
+    }
+
+    @Override
+    public String getName() {
+	return String.format("Rename category from \"%s\" to \"%s\"",
+	    oldDirectory, newDirectoy);
     }
 
 }

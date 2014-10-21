@@ -13,6 +13,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 
 import org.pottberg.ips.model.YearDirectoy;
+import org.pottberg.ips.model.command.CommandExecutor;
 import org.pottberg.ips.model.loader.service.CategoryLoaderService;
 import org.pottberg.ips.view.CategoryManagement;
 import org.pottberg.ips.view.ImageManagement;
@@ -38,6 +39,8 @@ public class MainController implements Controller {
 
     private final DirectoryChooser directoryChooser;
 
+    private CommandExecutor commandExecutor;
+
     public MainController(Main main) {
 	this.root = main;
 	categoryLoaderService = new CategoryLoaderService();
@@ -45,6 +48,7 @@ public class MainController implements Controller {
 	selectedSourcePathProperty = new SimpleObjectProperty<>();
 	yearDirectoriesProperty = new SimpleObjectProperty<>();
 	directoryChooser = new DirectoryChooser();
+	commandExecutor = new CommandExecutor();
     }
 
     @FXML
@@ -111,10 +115,23 @@ public class MainController implements Controller {
     public void onExitClicked(ActionEvent event) {
 	Platform.exit();
     }
+    
+    @FXML
+    public void undoClicked(ActionEvent event) {
+	commandExecutor.undo();
+    }
+    
+    public void redoClicked(ActionEvent event) {
+	commandExecutor.redo();
+    }
 
     private Window getRootWindow() {
 	return root.getScene()
 	.getWindow();
+    }
+
+    public CommandExecutor getCommandExecutor() {
+	return commandExecutor;
     }
 
 }

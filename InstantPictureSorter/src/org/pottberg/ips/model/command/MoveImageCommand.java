@@ -8,7 +8,7 @@ import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
 
-public class MoveImageCommand extends Command {
+public class MoveImageCommand extends SimpleCommand {
 
     private ImageGroup source;
     private Category target;
@@ -18,15 +18,15 @@ public class MoveImageCommand extends Command {
     private ImageData imageData;
     private Path sourcePath;
     private Path targetPath;
+    private Path fileName;
 
-    public MoveImageCommand(Command previousCommand, ImageData imageData,
-	ImageGroup source, Category target) {
-	super(previousCommand);
+    public MoveImageCommand(ImageData imageData, ImageGroup source,
+	Category target) {
 	this.imageData = imageData;
 	this.source = source;
 	this.target = target;
 	Path filePath = imageData.getPath();
-	Path fileName = filePath.getFileName();
+	fileName = filePath.getFileName();
 	sourceDirectory = filePath.getParent();
 	targetDirectory = target.getDirectory();
 	sourcePath = sourceDirectory.resolve(fileName);
@@ -59,5 +59,11 @@ public class MoveImageCommand extends Command {
     @Override
     protected void revertFileSystem() throws IOException {
 	Files.move(targetPath, sourcePath);
+    }
+
+    @Override
+    public String getName() {
+	return String.format("Move image \"%s\" from \"%s\" to \"%s\" ",
+	    fileName, sourceDirectory, targetDirectory);
     }
 }
