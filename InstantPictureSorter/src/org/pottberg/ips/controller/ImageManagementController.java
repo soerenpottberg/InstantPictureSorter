@@ -343,9 +343,17 @@ public class ImageManagementController extends CategoryBasedController {
 	}
 	return null;
     }
+    
+    @FXML
+    private void openTargetDirectoryClicked(ActionEvent event) {
+	mainController.openTargetDirectoryClicked(event);
+    }
 
     @FXML
     private void selectAllClicked(ActionEvent event) {
+	if(selectedImageGroupImageData.get() == null) {
+	    return;
+	}
 	selectedUnsortedImageData.setAll(selectedImageGroupImageData.get());
     }
 
