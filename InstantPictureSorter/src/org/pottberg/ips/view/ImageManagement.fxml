@@ -75,7 +75,7 @@
 				</tooltip>
 			</Button>
 			<Button GridPane.rowIndex="0" GridPane.columnIndex="1"
-				text="Unselect All" onAction="#unselectAllClicked">
+				GridPane.columnSpan="2" text="Unselect All" onAction="#unselectAllClicked">
 				<tooltip>
 					<Tooltip text="Unselect all pictures of the selected date." />
 				</tooltip>
@@ -94,7 +94,11 @@
 				</tooltip>
 			</RadioButton>
 			<Label GridPane.rowIndex="2" GridPane.columnIndex="2"
-				styleClass="preview" fx:id="suggestedCategoryPreviewLabel"></Label>
+				styleClass="preview" fx:id="suggestedCategoryPreviewLabel">
+				<tooltip>
+					<Tooltip text="${suggestedCategoryPreviewLabel.text}" />
+				</tooltip>
+			</Label>
 
 			<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
 				GridPane.columnSpan="2" toggleGroup="$categoryToggleGroup" fx:id="newCategoryRadioButton">
@@ -104,8 +108,13 @@
 				</tooltip>
 			</RadioButton>
 			<Label GridPane.rowIndex="3" GridPane.columnIndex="2"
-				styleClass="preview" fx:id="newCategoryPreviewLabel"></Label>
-			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name: </Label>
+				styleClass="preview" fx:id="newCategoryPreviewLabel">
+				<tooltip>
+					<Tooltip text="${newCategoryPreviewLabel.text}" />
+				</tooltip>
+			</Label>
+			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name:
+			</Label>
 			<TextField GridPane.rowIndex="4" GridPane.columnIndex="2"
 				fx:id="newCategoryNameTextField" promptText="Enter a name for the category">
 			</TextField>
@@ -118,8 +127,13 @@
 				</tooltip>
 			</RadioButton>
 			<Label GridPane.rowIndex="5" GridPane.columnIndex="2"
-				styleClass="preview" fx:id="userDefinedCategoryPreviewLabel"></Label>
-			<Label GridPane.rowIndex="6" GridPane.columnIndex="1">Year: </Label>
+				styleClass="preview" fx:id="userDefinedCategoryPreviewLabel">
+				<tooltip>
+					<Tooltip text="${userDefinedCategoryPreviewLabel.text}" />
+				</tooltip>
+			</Label>
+			<Label GridPane.rowIndex="6" GridPane.columnIndex="1">Year:
+			</Label>
 			<ComboBox GridPane.rowIndex="6" GridPane.columnIndex="2"
 				fx:id="yearsCombobox">
 			</ComboBox>
@@ -147,13 +161,17 @@
 			</ListView>
 
 			<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
-				GridPane.columnSpan="2" text="Move to Selected Category" onAction="#moveToSelectedCategoryClicked">
+				GridPane.columnSpan="2" text="Move Pictures" onAction="#moveToSelectedCategoryClicked">
 				<tooltip>
 					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
 			</Button>
 			<Label GridPane.rowIndex="9" GridPane.columnIndex="2"
-				styleClass="preview" fx:id="categoryPreviewLabel"></Label>
+				styleClass="preview" fx:id="categoryPreviewLabel">
+				<tooltip>
+					<Tooltip text="${categoryPreviewLabel.text}" />
+				</tooltip>
+			</Label>
 		</GridPane>
 	</right>
 </fx:root>

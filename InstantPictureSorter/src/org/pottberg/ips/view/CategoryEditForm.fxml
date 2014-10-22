@@ -32,21 +32,33 @@
 		selected="true">Suggested Name
 	</RadioButton>
 	<Label GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="preview"
-		fx:id="suggestedNamePreviewLabel"></Label>
+		fx:id="suggestedNamePreviewLabel">
+		<tooltip>
+			<Tooltip text="${suggestedNamePreviewLabel.text}" />
+		</tooltip>
+	</Label>
 
 	<RadioButton GridPane.rowIndex="3" GridPane.columnIndex="0"
 		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="fullYearNameRadioButton">Full
 		Year
 	</RadioButton>
 	<Label GridPane.rowIndex="3" GridPane.columnIndex="2" styleClass="preview"
-		fx:id="fullYearNamePreviewLabel"></Label>
+		fx:id="fullYearNamePreviewLabel">
+		<tooltip>
+			<Tooltip text="${fullYearNamePreviewLabel.text}" />
+		</tooltip>
+	</Label>
 
 	<RadioButton GridPane.rowIndex="4" GridPane.columnIndex="0"
 		GridPane.columnSpan="2" toggleGroup="$dateRangeToggleGroup" fx:id="userDefinedNameRadioButton">User
 		Defined
 	</RadioButton>
 	<Label GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="preview"
-		fx:id="userDefinedNamePreviewLabel"></Label>
+		fx:id="userDefinedNamePreviewLabel">
+		<tooltip>
+			<Tooltip text="${userDefinedNamePreviewLabel.text}" />
+		</tooltip>
+	</Label>
 	<Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date:
 	</Label>
 	<DatePicker GridPane.rowIndex="5" GridPane.columnIndex="2"
@@ -67,7 +79,11 @@
 		</tooltip>
 	</Button>
 	<Label GridPane.rowIndex="8" GridPane.columnIndex="2" styleClass="preview"
-		fx:id="namePreviewLabel"></Label>
+		fx:id="namePreviewLabel">
+		<tooltip>
+			<Tooltip text="${namePreviewLabel.text}" />
+		</tooltip>
+	</Label>
 
 	<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
 		GridPane.columnSpan="2" text="Discard Changes" onAction="#resetCategoryClicked">
@@ -76,5 +92,9 @@
 		</tooltip>
 	</Button>
 	<Label GridPane.rowIndex="9" GridPane.columnIndex="2" styleClass="preview"
-		fx:id="currentPathLabel"></Label>
+		fx:id="currentPathLabel">
+		<tooltip>
+			<Tooltip text="${currentPathLabel.text}" />
+		</tooltip>
+	</Label>
 </fx:root>

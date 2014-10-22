@@ -2,6 +2,8 @@
 	-fx-border-style: dotted;
 	-fx-padding: 5px;
 	-fx-text-overrun: center-ellipsis;
+	-fx-min-width: 175px;
+	-fx-max-width: 175px;
 }
 .gridpane{
 	-fx-padding: 5px;
