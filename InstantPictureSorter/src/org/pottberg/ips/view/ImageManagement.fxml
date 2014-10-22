@@ -15,10 +15,16 @@
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
-		<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
+		<ToolBar>
 			<Button text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked">
 				<tooltip>
 					<Tooltip text="Use to open a folder containing pictures to be sorted." />
+				</tooltip>
+			</Button>
+			<Button text="Open Target Folder " onAction="#openTargetDirectoryClicked">
+				<tooltip>
+					<Tooltip
+						text="Use to open a folder that acts as a target for the sorting." />
 				</tooltip>
 			</Button>
 		</ToolBar>
@@ -125,7 +131,8 @@
 				<placeholder>
 					<GridPane styleClass="placeholder">
 						<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
-							styleClass="note" style="-fx-max-width: 160px;">3. Open a folder that acts as a target for the
+							styleClass="note" style="-fx-max-width: 160px;">3. Open a folder that acts as a target
+							for the
 							sorting.
 						</Label>
 						<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
