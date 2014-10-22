@@ -11,3 +11,15 @@
 .list-item-selected{
 	-fx-background-color: lime;
 }
+.placeholder .note{
+	-fx-text-fill: #5588ff;
+	-fx-font-size: 1.5em;
+	-fx-wrap-text: true;
+	-fx-min-width: 100px;
+	-fx-max-width: 150px;
+}
+.placeholder{
+	-fx-padding: 20px;
+	-fx-hgap: 5px;
+	-fx-vgap: 10px;
+}

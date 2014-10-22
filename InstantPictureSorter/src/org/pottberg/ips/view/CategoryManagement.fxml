@@ -13,10 +13,11 @@
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
 		<ToolBar>
-			<Button fx:id="openTargetFolderButton" text="Open Target Folder " onAction="#openTargetDirectoryClicked">
+			<Button text="Open Target Folder "
+				onAction="#openTargetDirectoryClicked">
 				<tooltip>
 					<Tooltip
-						text="Use to open a folder that acts as a target for the sorting ." />
+						text="Use to open a folder that acts as a target for the sorting." />
 				</tooltip>
 			</Button>
 			<ComboBox fx:id="yearsCombobox">
@@ -25,14 +26,35 @@
 	</top>
 	<left>
 		<ListView fx:id="categoriesListView">
+			<placeholder>
+				<GridPane styleClass="placeholder">
+					<Label GridPane.rowIndex="0" GridPane.columnIndex="0" 
+						styleClass="note">1. Open a folder that acts as a target for the sorting.
+					</Label>
+					<Button GridPane.rowIndex="1" GridPane.columnIndex="0" text="Open Target Folder "
+						onAction="#openTargetDirectoryClicked">
+						<tooltip>
+							<Tooltip
+								text="Use to open a folder that acts as a target for the sorting." />
+						</tooltip>
+					</Button>
+				</GridPane>
+			</placeholder>
 		</ListView>
 	</left>
 	<center>
 		<ListView fx:id="sortedPicturesListView">
+			<placeholder>
+				<GridPane styleClass="placeholder">
+					<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+						styleClass="note">2. Select a category on the left.
+					</Label>
+				</GridPane>
+			</placeholder>
 		</ListView>
 	</center>
 	<right>
-		<CategoryEditForm  fx:id="categoryEditForm"></CategoryEditForm>
+		<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
 	</right>
 	<bottom>
 		<ProgressBar fx:id="sortedPicturesProgressBar">

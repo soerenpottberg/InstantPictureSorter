@@ -10,12 +10,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import org.pottberg.ips.view.CategoryEditForm?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
 		<ToolBar styleClass="button-bar" orientation="HORIZONTAL">
-			<Button fx:id="openSourceFolderButton" text="Open Unsorted Pictures"
-				onAction="#openSourceDirectoryClicked">
+			<Button text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked">
 				<tooltip>
 					<Tooltip text="Use to open a folder containing pictures to be sorted." />
 				</tooltip>
@@ -26,10 +26,32 @@
 	</top>
 	<left>
 		<ListView fx:id="imageGroupListView">
+			<placeholder>
+				<GridPane styleClass="placeholder">
+					<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+						styleClass="note">1. Open a folder containing unsorted
+						pictures.
+					</Label>
+					<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
+						text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked">
+						<tooltip>
+							<Tooltip text="Use to open a folder containing pictures to be sorted." />
+						</tooltip>
+					</Button>
+				</GridPane>
+			</placeholder>
 		</ListView>
 	</left>
 	<center>
 		<ListView fx:id="unsortedPicturesListView">
+			<placeholder>
+				<GridPane styleClass="placeholder">
+					<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+						styleClass="note">2. Select a group of unsorted
+						pictures on the left.
+					</Label>
+				</GridPane>
+			</placeholder>
 		</ListView>
 	</center>
 	<right>
@@ -100,6 +122,21 @@
 			</Label>
 			<ListView GridPane.rowIndex="8" GridPane.columnIndex="1"
 				GridPane.columnSpan="2" fx:id="categoriesListView">
+				<placeholder>
+					<GridPane styleClass="placeholder">
+						<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+							styleClass="note">3. Open a folder that acts as a target for the
+							sorting.
+						</Label>
+						<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
+							text="Open Target Folder " onAction="#openTargetDirectoryClicked">
+							<tooltip>
+								<Tooltip
+									text="Use to open a folder that acts as a target for the sorting." />
+							</tooltip>
+						</Button>
+					</GridPane>
+				</placeholder>
 			</ListView>
 
 			<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
