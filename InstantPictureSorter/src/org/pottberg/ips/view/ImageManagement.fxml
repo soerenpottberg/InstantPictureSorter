@@ -11,6 +11,7 @@
 <?import org.pottberg.ips.view.CategoryEditForm?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.SplitPane?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
@@ -24,35 +25,36 @@
 			</Button>
 		</ToolBar>
 	</top>
-	<left>
-		<ListView fx:id="imageGroupListView">
-			<placeholder>
-				<GridPane styleClass="placeholder">
-					<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
-						styleClass="note">1. Open a folder containing unsorted
-						pictures.
-					</Label>
-					<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
-						text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked">
-						<tooltip>
-							<Tooltip text="Use to open a folder containing pictures to be sorted." />
-						</tooltip>
-					</Button>
-				</GridPane>
-			</placeholder>
-		</ListView>
-	</left>
 	<center>
-		<ListView fx:id="unsortedPicturesListView">
-			<placeholder>
-				<GridPane styleClass="placeholder">
-					<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
-						styleClass="note">2. Select a group of unsorted
-						pictures on the left.
-					</Label>
-				</GridPane>
-			</placeholder>
-		</ListView>
+		<SplitPane>
+			<ListView fx:id="imageGroupListView">
+				<placeholder>
+					<GridPane styleClass="placeholder">
+						<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+							styleClass="note">1. Open a folder containing unsorted
+							pictures.
+						</Label>
+						<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
+							text="Open Unsorted Pictures" onAction="#openSourceDirectoryClicked">
+							<tooltip>
+								<Tooltip
+									text="Use to open a folder containing pictures to be sorted." />
+							</tooltip>
+						</Button>
+					</GridPane>
+				</placeholder>
+			</ListView>
+			<ListView fx:id="unsortedPicturesListView">
+				<placeholder>
+					<GridPane styleClass="placeholder">
+						<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+							styleClass="note">2. Select a group of unsorted
+							pictures on the left.
+						</Label>
+					</GridPane>
+				</placeholder>
+			</ListView>
+		</SplitPane>
 	</center>
 	<right>
 		<GridPane styleClass="gridpane">
