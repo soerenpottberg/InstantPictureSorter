@@ -21,8 +21,6 @@
 					<Tooltip text="Use to open a folder containing pictures to be sorted." />
 				</tooltip>
 			</Button>
-			<Button text="Remove" onAction="#removeClicked">
-			</Button>
 		</ToolBar>
 	</top>
 	<center>
@@ -127,7 +125,7 @@
 				<placeholder>
 					<GridPane styleClass="placeholder">
 						<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
-							styleClass="note">3. Open a folder that acts as a target for the
+							styleClass="note" style="-fx-max-width: 160px;">3. Open a folder that acts as a target for the
 							sorting.
 						</Label>
 						<Button GridPane.rowIndex="1" GridPane.columnIndex="0"

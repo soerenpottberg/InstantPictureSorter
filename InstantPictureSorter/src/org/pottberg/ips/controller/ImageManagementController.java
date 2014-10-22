@@ -264,16 +264,6 @@ public class ImageManagementController extends CategoryBasedController {
     }
 
     @FXML
-    private void removeClicked(ActionEvent event) {
-	final int index = unsortedPicturesListView.getSelectionModel()
-	    .getSelectedIndex();
-	if (index != -1) {
-	    unsortedPicturesListView.getItems()
-		.remove(index);
-	}
-    }
-
-    @FXML
     private void moveToSelectedCategoryClicked(ActionEvent event) {
 	Category targetCategory = null;
 	Command createYearDirectoryCommand = null;
