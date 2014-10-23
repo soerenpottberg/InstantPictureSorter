@@ -10,6 +10,7 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -111,6 +112,10 @@ public class ImageGroup implements Comparable<ImageGroup> {
     @Override
     public int compareTo(ImageGroup other) {
 	return getCreationDate().compareTo(other.getCreationDate());
+    }
+
+    public ReadOnlyDoubleProperty progressProperty() {
+	return imageLoaderService.progressProperty();
     }
 
 }

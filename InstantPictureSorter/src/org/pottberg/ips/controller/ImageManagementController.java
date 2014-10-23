@@ -1,5 +1,6 @@
 package org.pottberg.ips.controller;
 
+import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static javafx.beans.binding.Bindings.createObjectBinding;
 import static javafx.beans.binding.Bindings.createStringBinding;
 import static javafx.beans.binding.Bindings.when;
@@ -8,8 +9,11 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -23,6 +27,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.CategoryNameBuilder;
@@ -35,6 +40,7 @@ import org.pottberg.ips.model.command.ComplexCommand;
 import org.pottberg.ips.model.command.CreateCategoryCommand;
 import org.pottberg.ips.model.command.CreateYearDirectoryCommand;
 import org.pottberg.ips.model.command.MoveImagesCommand;
+import org.pottberg.ips.model.loader.ImageLoader;
 import org.pottberg.ips.model.loader.service.ImageGroupLoaderService;
 import org.pottberg.ips.view.ImageGroupListCell;
 import org.pottberg.ips.view.ImageListCell;
@@ -77,6 +83,9 @@ public class ImageManagementController extends CategoryBasedController {
     @FXML
     private Label categoryPreviewLabel;
 
+    @FXML
+    private Button moveToSelectedCategoryButton;
+
     private ObjectProperty<Path> selectedSourcePathProperty;
 
     private ImageGroupLoaderService imageGroupLoaderService;
@@ -87,6 +96,8 @@ public class ImageManagementController extends CategoryBasedController {
 
     private ObjectBinding<LocalDate> selectedImageGroupDate;
 
+    private BooleanBinding isMoveable;
+
     private ObservableList<ImageData> selectedUnsortedImageData;
 
     private ObjectProperty<Category> suggestedCategoryProperty;
@@ -95,18 +106,29 @@ public class ImageManagementController extends CategoryBasedController {
 
     private ChangeListener<Category> selectUserDefinedCategoryListener;
 
+    private DoubleProperty selectedImageGroupProgressProperty;
+
     public ImageManagementController() {
 	selectedSourcePathProperty = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
 	selectedImageGroupProperty = new SimpleObjectProperty<>();
 	selectedUnsortedImageData = FXCollections.observableArrayList();
 	suggestedCategoryProperty = new SimpleObjectProperty<>();
+	selectedImageGroupProgressProperty = new SimpleDoubleProperty();
     }
 
     @Override
     @FXML
     protected void initialize() {
 	super.initialize();
+
+	isMoveable = createBooleanBinding(
+	    () -> !selectedUnsortedImageData.isEmpty(),
+	    selectedUnsortedImageData).and(
+	    selectedImageGroupProgressProperty.isEqualTo(ImageLoader.LOADED_COMPLETLY, 1e-16));
+
+	moveToSelectedCategoryButton.disableProperty()
+	    .bind(isMoveable.not());
 
 	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
 	    newYearList) -> {
@@ -202,9 +224,13 @@ public class ImageManagementController extends CategoryBasedController {
 		.getImageDataList();
 	}, selectedImageGroupProperty);
 
-	selectedImageGroupProperty.addListener((observableList, oldList,
-	    newList) -> {
+	selectedImageGroupProperty.addListener((observableImageGroup,
+	    oldImageGroup, newImageGroup) -> {
 	    selectedUnsortedImageData.clear();
+	    selectedImageGroupProgressProperty.unbind();
+	    if (newImageGroup != null) {
+		selectedImageGroupProgressProperty.bind(newImageGroup.progressProperty());
+	    }
 	});
 
 	unsortedPicturesListView.itemsProperty()
@@ -307,18 +333,18 @@ public class ImageManagementController extends CategoryBasedController {
 		    return moveImagemsCommand.getName();
 		}
 	    };
-	    if(createYearDirectoryCommand != null) {
+	    if (createYearDirectoryCommand != null) {
 		complexCommand.addCommand(createYearDirectoryCommand);
 	    }
-	    if(createCategoryCommand != null) {
+	    if (createCategoryCommand != null) {
 		complexCommand.addCommand(createCategoryCommand);
 	    }
 	    complexCommand.addCommand(moveImagemsCommand);
 	    mainController.getCommandExecutor()
-	    .execute(complexCommand);
+		.execute(complexCommand);
 	} else {
-	mainController.getCommandExecutor()
-	    .execute(moveImagemsCommand);
+	    mainController.getCommandExecutor()
+		.execute(moveImagemsCommand);
 	}
     }
 
@@ -333,7 +359,7 @@ public class ImageManagementController extends CategoryBasedController {
 	}
 	return null;
     }
-    
+
     @FXML
     private void openTargetDirectoryClicked(ActionEvent event) {
 	mainController.openTargetDirectoryClicked(event);
@@ -341,7 +367,7 @@ public class ImageManagementController extends CategoryBasedController {
 
     @FXML
     private void selectAllClicked(ActionEvent event) {
-	if(selectedImageGroupImageData.get() == null) {
+	if (selectedImageGroupImageData.get() == null) {
 	    return;
 	}
 	selectedUnsortedImageData.setAll(selectedImageGroupImageData.get());

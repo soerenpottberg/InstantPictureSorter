@@ -161,7 +161,7 @@
 			</ListView>
 
 			<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
-				GridPane.columnSpan="2" text="Move Pictures" onAction="#moveToSelectedCategoryClicked">
+				GridPane.columnSpan="2" text="Move Pictures" fx:id="moveToSelectedCategoryButton" onAction="#moveToSelectedCategoryClicked">
 				<tooltip>
 					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
