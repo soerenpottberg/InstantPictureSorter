@@ -11,8 +11,10 @@ import java.time.LocalDate;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -27,7 +29,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.CategoryNameBuilder;
@@ -84,7 +85,22 @@ public class ImageManagementController extends CategoryBasedController {
     private Label categoryPreviewLabel;
 
     @FXML
+    private Label newCategoryNameLabel;
+
+    @FXML
+    private Label yearLabel;
+
+    @FXML
+    private Label categoriesLabel;
+
+    @FXML
     private Button moveToSelectedCategoryButton;
+
+    @FXML
+    private Button selectAllButton;
+
+    @FXML
+    private Button unselectAllButton;
 
     private ObjectProperty<Path> selectedSourcePathProperty;
 
@@ -108,6 +124,8 @@ public class ImageManagementController extends CategoryBasedController {
 
     private DoubleProperty selectedImageGroupProgressProperty;
 
+    private BooleanProperty disabledProperty;
+
     public ImageManagementController() {
 	selectedSourcePathProperty = new SimpleObjectProperty<>();
 	imageGroupLoaderService = new ImageGroupLoaderService();
@@ -115,6 +133,7 @@ public class ImageManagementController extends CategoryBasedController {
 	selectedUnsortedImageData = FXCollections.observableArrayList();
 	suggestedCategoryProperty = new SimpleObjectProperty<>();
 	selectedImageGroupProgressProperty = new SimpleDoubleProperty();
+	disabledProperty = new SimpleBooleanProperty();
     }
 
     @Override
@@ -122,12 +141,47 @@ public class ImageManagementController extends CategoryBasedController {
     protected void initialize() {
 	super.initialize();
 
+	selectAllButton.disableProperty()
+	    .bind(selectedImageGroupProperty.isNull());
+	unselectAllButton.disableProperty()
+	    .bind(selectedImageGroupProperty.isNull());
+
+	disabledProperty.bind(selectedImageGroupProperty.isNull()
+	    .or(selectedTargetPathProperty.isNull()));
+
+	suggestedCategoryRadioButton.disableProperty()
+	    .bind(disabledProperty);
+	newCategoryRadioButton.disableProperty()
+	    .bind(disabledProperty);
+	userDefinedCategoryRadioButton.disableProperty()
+	    .bind(disabledProperty);
+	newCategoryNameTextField.disableProperty()
+	    .bind(disabledProperty);
+	suggestedCategoryPreviewLabel.disableProperty()
+	    .bind(disabledProperty);
+	newCategoryPreviewLabel.disableProperty()
+	    .bind(disabledProperty);
+	userDefinedCategoryPreviewLabel.disableProperty()
+	    .bind(disabledProperty);
+	yearsCombobox.disableProperty()
+	    .bind(disabledProperty);
+	newCategoryNameLabel.disableProperty()
+	    .bind(disabledProperty);
+	yearLabel.disableProperty()
+	    .bind(disabledProperty);
+	categoriesLabel.disableProperty()
+	    .bind(disabledProperty);
+
 	isMoveable = createBooleanBinding(
 	    () -> !selectedUnsortedImageData.isEmpty(),
 	    selectedUnsortedImageData).and(
-	    selectedImageGroupProgressProperty.isEqualTo(ImageLoader.LOADED_COMPLETLY, 1e-16));
+	    selectedImageGroupProgressProperty.isEqualTo(
+		ImageLoader.LOADED_COMPLETLY, 1e-16))
+	    .and(disabledProperty.not());
 
 	moveToSelectedCategoryButton.disableProperty()
+	    .bind(isMoveable.not());
+	categoryPreviewLabel.disableProperty()
 	    .bind(isMoveable.not());
 
 	yearDirectoriesProperty.addListener((observableYearList, oldYearList,

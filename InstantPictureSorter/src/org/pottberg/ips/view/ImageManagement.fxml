@@ -69,13 +69,14 @@
 
 
 			<Button GridPane.rowIndex="0" GridPane.columnIndex="0"
-				text="Select All" onAction="#selectAllClicked">
+				text="Select All" fx:id="selectAllButton" onAction="#selectAllClicked">
 				<tooltip>
 					<Tooltip text="Select all pictures of the selected date." />
 				</tooltip>
 			</Button>
 			<Button GridPane.rowIndex="0" GridPane.columnIndex="1"
-				GridPane.columnSpan="2" text="Unselect All" onAction="#unselectAllClicked">
+				GridPane.columnSpan="2" text="Unselect All" fx:id="unselectAllButton"
+				onAction="#unselectAllClicked">
 				<tooltip>
 					<Tooltip text="Unselect all pictures of the selected date." />
 				</tooltip>
@@ -113,7 +114,7 @@
 					<Tooltip text="${newCategoryPreviewLabel.text}" />
 				</tooltip>
 			</Label>
-			<Label GridPane.rowIndex="4" GridPane.columnIndex="1">Name:
+			<Label GridPane.rowIndex="4" GridPane.columnIndex="1" fx:id="newCategoryNameLabel">Name:
 			</Label>
 			<TextField GridPane.rowIndex="4" GridPane.columnIndex="2"
 				fx:id="newCategoryNameTextField" promptText="Enter a name for the category">
@@ -132,13 +133,13 @@
 					<Tooltip text="${userDefinedCategoryPreviewLabel.text}" />
 				</tooltip>
 			</Label>
-			<Label GridPane.rowIndex="6" GridPane.columnIndex="1">Year:
+			<Label GridPane.rowIndex="6" GridPane.columnIndex="1" fx:id="yearLabel">Year:
 			</Label>
 			<ComboBox GridPane.rowIndex="6" GridPane.columnIndex="2"
 				fx:id="yearsCombobox">
 			</ComboBox>
 
-			<Label GridPane.rowIndex="7" GridPane.columnIndex="1">Categories:
+			<Label GridPane.rowIndex="7" GridPane.columnIndex="1" fx:id="categoriesLabel">Categories:
 			</Label>
 			<ListView GridPane.rowIndex="8" GridPane.columnIndex="1"
 				GridPane.columnSpan="2" fx:id="categoriesListView">
@@ -161,7 +162,8 @@
 			</ListView>
 
 			<Button GridPane.rowIndex="9" GridPane.columnIndex="0"
-				GridPane.columnSpan="2" text="Move Pictures" fx:id="moveToSelectedCategoryButton" onAction="#moveToSelectedCategoryClicked">
+				GridPane.columnSpan="2" text="Move Pictures" fx:id="moveToSelectedCategoryButton"
+				onAction="#moveToSelectedCategoryClicked">
 				<tooltip>
 					<Tooltip text="Move all selected pictures to the selected category." />
 				</tooltip>
