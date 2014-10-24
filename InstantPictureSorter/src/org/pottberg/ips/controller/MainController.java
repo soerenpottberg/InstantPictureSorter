@@ -30,7 +30,7 @@ public class MainController implements Controller {
     private CategoryLoaderService categoryLoaderService;
 
     private ObjectProperty<Path> selectedTargetPathProperty;
-    
+
     private ObjectProperty<Path> selectedSourcePathProperty;
 
     private ObjectProperty<ObservableList<YearDirectoy>> yearDirectoriesProperty;
@@ -60,6 +60,8 @@ public class MainController implements Controller {
 	    categoryLoaderService.setOnSucceeded(workerEvent -> {
 		yearDirectoriesProperty.set(categoryLoaderService.getValue());
 	    });
+	    categoryManagement.progressProperty()
+		.bind(categoryLoaderService.progressProperty());
 	    categoryLoaderService.restart();
 	});
 
@@ -72,14 +74,14 @@ public class MainController implements Controller {
 	    .bindBidirectional(selectedTargetPathProperty);
 	categoryManagement.selectedTargetPathProperty()
 	    .bindBidirectional(selectedTargetPathProperty);
-	
+
 	imageManagement.selectedSourcePathProperty()
 	    .bindBidirectional(selectedSourcePathProperty);
-	
+
 	categoryManagement.setMainController(this);
 	imageManagement.setMainController(this);
     }
-    
+
     @FXML
     public void openTargetDirectoryClicked(ActionEvent event) {
 	String title = "Open Target Folder";
@@ -108,29 +110,29 @@ public class MainController implements Controller {
 	directoryChooser.setTitle(title);
 	final File selectedDirectory = directoryChooser
 	    .showDialog(getRootWindow());
-	if(selectedDirectory == null) {
+	if (selectedDirectory == null) {
 	    return null;
 	}
 	return selectedDirectory.toPath();
     }
-    
+
     @FXML
     public void onExitClicked(ActionEvent event) {
 	Platform.exit();
     }
-    
+
     @FXML
     public void undoClicked(ActionEvent event) {
 	commandExecutor.undo();
     }
-    
+
     public void redoClicked(ActionEvent event) {
 	commandExecutor.redo();
     }
 
     private Window getRootWindow() {
 	return root.getScene()
-	.getWindow();
+	    .getWindow();
     }
 
     public CommandExecutor getCommandExecutor() {

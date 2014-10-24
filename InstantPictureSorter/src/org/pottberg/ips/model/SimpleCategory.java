@@ -1,8 +1,11 @@
 package org.pottberg.ips.model;
 
+import static javafx.beans.binding.Bindings.createDoubleBinding;
+
 import java.nio.file.Path;
 import java.time.LocalDate;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -33,6 +36,7 @@ public class SimpleCategory implements Category {
     private ObjectProperty<Path> directoryProperty;
     private CategoryNameParser categoryNameParser;
     private YearDirectoy yearDirectory;
+    private DoubleProperty progressProperty;
 
     private SimpleCategory(YearDirectoy yearDirectory, String name,
 	LocalDate startDate,
@@ -48,6 +52,7 @@ public class SimpleCategory implements Category {
 	userDefinedEndDateProperty = new SimpleObjectProperty<>(
 	    userDefinedEndDate);
 	nameProperty = new SimpleStringProperty(name);
+	progressProperty = new SimpleDoubleProperty(1);
     }
 
     public SimpleCategory(YearDirectoy yearDirectory, Path directory) {
@@ -58,6 +63,22 @@ public class SimpleCategory implements Category {
 	fileAttributeLoaderService.setOnSucceeded(event -> {
 	    calculateDates();
 	});
+	progressProperty.bind(createDoubleBinding(() -> {
+	    Double sum = 0d;
+	    if (imageLoaderService.getProgress() == -1
+		&& fileAttributeLoaderService.getProgress() == -1) {
+		return -1d;
+	    }
+	    if (imageLoaderService.getProgress() != -1) {
+		sum += imageLoaderService.getProgress();
+	    }
+	    if (fileAttributeLoaderService.getProgress() != -1) {
+		sum += fileAttributeLoaderService.getProgress();
+	    }
+	    return sum / 2d;
+	}, imageLoaderService.progressProperty(),
+	    fileAttributeLoaderService.progressProperty())
+	    );
 	setDirtectoy(directory);
 	parseDirectory();
     }
@@ -174,10 +195,7 @@ public class SimpleCategory implements Category {
 
     @Override
     public ReadOnlyDoubleProperty progressProperty() {
-	if (imageLoaderService == null) {
-	    return new SimpleDoubleProperty(1);
-	}
-	return imageLoaderService.progressProperty();
+	return progressProperty;
     }
 
     @Override

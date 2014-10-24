@@ -24,6 +24,7 @@ public class CategoryLoader extends Task<ObservableList<YearDirectoy>> {
     @Override
     protected ObservableList<YearDirectoy> call() throws Exception {
 	ObservableList<YearDirectoy> years = FXCollections.observableArrayList();
+	updateProgress(-1, -1);
 	try (DirectoryStream<Path> yearStream = Files.newDirectoryStream(dir,
 	    "[0-9][0-9][0-9][0-9]")) {
 	    for (Path yearPath : yearStream) {
@@ -38,6 +39,7 @@ public class CategoryLoader extends Task<ObservableList<YearDirectoy>> {
 		years.add(year);
 	    }
 	}
+	updateProgress(1, 1);
 	return years;
     }
 

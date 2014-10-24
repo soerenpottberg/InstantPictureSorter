@@ -2,7 +2,9 @@ package org.pottberg.ips.controller;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,16 +34,25 @@ public class CategoryManagementController extends CategoryBasedController {
     private ListView<ImageData> sortedPicturesListView;
 
     @FXML
-    private ProgressBar sortedPicturesProgressBar;
+    private ProgressBar categoryManagementProgressBar;
 
     @FXML
     private CategoryEditForm categoryEditForm;
 
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
 
+    private DoubleProperty progressProperty;
+    
+    public CategoryManagementController() {
+	progressProperty = new SimpleDoubleProperty();
+    }
+
     @FXML
     protected void initialize() {
 	super.initialize();
+
+	categoryManagementProgressBar.progressProperty()
+	    .bind(progressProperty);
 
 	yearDirectoriesProperty.addListener((observableYearList, oldYearList,
 	    newYearList) -> {
@@ -64,11 +75,9 @@ public class CategoryManagementController extends CategoryBasedController {
 		    if (oldCategory != null) {
 			oldCategory.stopLoadingImages();
 		    }
-		    sortedPicturesProgressBar.progressProperty()
-			.unbind();
+		    progressProperty.unbind();
 		    if (newCategory != null) {
-			sortedPicturesProgressBar.progressProperty()
-			    .bind(newCategory.progressProperty());
+			progressProperty.bind(newCategory.progressProperty());
 			newCategory.loadImageNames();
 			newCategory.startLoadingImages();
 		    }
@@ -99,5 +108,9 @@ public class CategoryManagementController extends CategoryBasedController {
     public void setMainController(MainController mainController) {
 	super.setMainController(mainController);
 	categoryEditForm.setMainController(mainController);
+    }
+    
+    public DoubleProperty progressProperty() {
+	return progressProperty;
     }
 }

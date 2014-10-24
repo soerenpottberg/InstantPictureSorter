@@ -57,7 +57,9 @@
 		<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
 	</right>
 	<bottom>
-		<ProgressBar fx:id="sortedPicturesProgressBar">
-		</ProgressBar>
+		<HBox styleClass="statusbar">
+			<ProgressBar fx:id="categoryManagementProgressBar"
+				progress="0"></ProgressBar>
+		</HBox>
 	</bottom>
 </fx:root>
