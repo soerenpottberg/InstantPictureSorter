@@ -1,6 +1,7 @@
 package org.pottberg.ips.controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,6 +17,7 @@ import javafx.scene.control.ProgressBar;
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.YearDirectoy;
+import org.pottberg.ips.model.loader.ImageLoader;
 import org.pottberg.ips.view.AttributedImageListCell;
 import org.pottberg.ips.view.CategoryEditForm;
 
@@ -42,14 +44,33 @@ public class CategoryManagementController extends CategoryBasedController {
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
 
     private DoubleProperty progressProperty;
+
+    private BooleanBinding isMoveable;
+
+    private DoubleProperty selectedCategoryProgressProperty;
     
     public CategoryManagementController() {
 	progressProperty = new SimpleDoubleProperty();
+	selectedCategoryProgressProperty = new SimpleDoubleProperty();
     }
 
     @FXML
     protected void initialize() {
 	super.initialize();
+	
+	selectedCategoryProperty.addListener((observableImageGroup,
+	    oldImageGroup, newImageGroup) -> {
+	    selectedCategoryProgressProperty.unbind();
+	    if (newImageGroup != null) {
+		selectedCategoryProgressProperty.bind(newImageGroup.progressProperty());
+	    }
+	});
+	
+	isMoveable = selectedCategoryProperty.isNotNull().and(
+	    selectedCategoryProgressProperty.isEqualTo(
+		ImageLoader.LOADED_COMPLETLY, 1e-16));
+
+	categoryEditForm.disableProperty().bind(isMoveable.not());
 
 	categoryManagementProgressBar.progressProperty()
 	    .bind(progressProperty);
