@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -101,6 +102,9 @@ public class ImageManagementController extends CategoryBasedController {
 
     @FXML
     private Button unselectAllButton;
+
+    @FXML
+    private ProgressBar imageManagementProgressBar;
 
     private ObjectProperty<Path> selectedSourcePathProperty;
 
@@ -237,8 +241,12 @@ public class ImageManagementController extends CategoryBasedController {
 				}
 			    });
 		}
+		imageManagementProgressBar.progressProperty()
+		    .bind(selectedImageGroupProgressProperty);
 		imageGroupListView.setItems(imageGroups);
 	    });
+	    imageManagementProgressBar.progressProperty()
+		.bind(imageGroupLoaderService.progressProperty());
 	    imageGroupLoaderService.restart();
 	});
 

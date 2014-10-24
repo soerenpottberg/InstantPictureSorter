@@ -43,7 +43,7 @@ public class CreationDateLoader extends Task<Void> {
 	return null;
     }
 
-    private void loadAttributes() throws IOException, JpegProcessingException {
+    public void loadAttributes() throws IOException, JpegProcessingException {
 	int i = 0;
 	updateProgress(i, imageDataList.size());
 	for (ImageData imageData : imageDataList) {
@@ -132,11 +132,6 @@ public class CreationDateLoader extends Task<Void> {
 	return date.toInstant()
 	    .atZone(ZoneId.systemDefault())
 	    .toLocalDate();
-    }
-
-    public static void loadFileAttributes(ObservableList<ImageData> imageDataList)
-	throws IOException, JpegProcessingException {
-	new CreationDateLoader(imageDataList, false).loadAttributes();
     }
 
 }

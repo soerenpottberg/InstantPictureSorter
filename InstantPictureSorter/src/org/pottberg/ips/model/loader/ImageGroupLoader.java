@@ -24,7 +24,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 
     @Override
     protected ObservableList<ImageGroup> call() throws Exception {
-
+	updateProgress(-1, -1);
 	try {
 	    ObservableList<ImageData> imageData = createImageData();
 
@@ -35,6 +35,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 	    return imageGroups;
 
 	} catch (Exception e) {
+	    updateProgress(0, 1);
 	    e.printStackTrace();
 	}
 
@@ -53,9 +54,17 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 	return imageData;
     }
 
-    private void loadCreationDate(ObservableList<ImageData> imageData)
+    private void loadCreationDate(ObservableList<ImageData> imageDataList)
 	throws Exception {
-	CreationDateLoader.loadFileAttributes(imageData);
+	CreationDateLoader creationDateLoader = new CreationDateLoader(
+	    imageDataList, false);
+	creationDateLoader.progressProperty()
+	    .addListener(
+		(observableProgress, oldProgress, newProgress) -> {
+		    updateProgress(creationDateLoader.getWorkDone(),
+			creationDateLoader.getTotalWork());
+		});
+	creationDateLoader.loadAttributes();
     }
 
     private ObservableList<ImageGroup> createImageGroups(

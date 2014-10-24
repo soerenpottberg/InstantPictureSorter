@@ -25,3 +25,6 @@
 	-fx-hgap: 5px;
 	-fx-vgap: 10px;
 }
+.statusbar{
+	-fx-padding: 5px;
+}

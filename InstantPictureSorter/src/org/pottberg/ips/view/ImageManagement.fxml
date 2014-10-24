@@ -12,6 +12,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.HBox?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
@@ -176,4 +179,9 @@
 			</Label>
 		</GridPane>
 	</right>
+	<bottom>
+	<HBox styleClass="statusbar">
+	<ProgressBar fx:id="imageManagementProgressBar" progress="0"></ProgressBar>
+	</HBox>
+	</bottom>
 </fx:root>
