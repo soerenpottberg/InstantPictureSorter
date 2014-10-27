@@ -5,9 +5,12 @@ import static javafx.beans.binding.Bindings.createDoubleBinding;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,6 +40,8 @@ public class SimpleCategory implements Category {
     private CategoryNameParser categoryNameParser;
     private YearDirectoy yearDirectory;
     private DoubleProperty progressProperty;
+    private BooleanProperty isAutomaticLoadingProperty;
+    private BooleanProperty isLoadingProperty;
 
     private SimpleCategory(YearDirectoy yearDirectory, String name,
 	LocalDate startDate,
@@ -53,6 +58,8 @@ public class SimpleCategory implements Category {
 	    userDefinedEndDate);
 	nameProperty = new SimpleStringProperty(name);
 	progressProperty = new SimpleDoubleProperty(1);
+	isAutomaticLoadingProperty = new SimpleBooleanProperty();
+	isLoadingProperty = new SimpleBooleanProperty();
     }
 
     public SimpleCategory(YearDirectoy yearDirectory, Path directory) {
@@ -81,6 +88,9 @@ public class SimpleCategory implements Category {
 	    );
 	setDirtectoy(directory);
 	parseDirectory();
+	isLoadingProperty.bind(imageNameLoader.runningProperty()
+	    .or(imageLoaderService.runningProperty())
+	    .or(fileAttributeLoaderService.runningProperty()));
     }
 
     public SimpleCategory(YearDirectoy yearDirectory, String name,
@@ -90,6 +100,7 @@ public class SimpleCategory implements Category {
 	String completeName = categoryNameBuilder.getSuggestedName();
 	Path parentDirectory = yearDirectory.getDirectory();
 	setDirtectoy(parentDirectory.resolve(completeName));
+	isLoadingProperty.set(false);
     }
 
     private void parseDirectory() {
@@ -143,8 +154,10 @@ public class SimpleCategory implements Category {
 	}
 
 	imageNameLoader.setOnSucceeded(event -> {
-	    startService(imageLoaderService);
-	    startService(fileAttributeLoaderService);
+	    if (isAutomaticLoadingProperty.get()) {
+		startService(imageLoaderService);
+		startService(fileAttributeLoaderService);
+	    }
 	});
 	new Thread(imageNameLoader).start();
     }
@@ -270,6 +283,15 @@ public class SimpleCategory implements Category {
 	    return false;
 	}
 	return true;
+    }
+
+    public BooleanProperty isAutomaticLoadingProperty() {
+	return isAutomaticLoadingProperty;
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty isLoadingProperty() {
+	return isLoadingProperty;
     }
 
 }

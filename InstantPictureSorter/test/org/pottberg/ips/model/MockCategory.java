@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -45,7 +47,7 @@ public class MockCategory implements Category {
     public ObservableList<ImageData> getImageDataList() {
 	return null;
     }
-   
+
     @Override
     public void startLoadingImages() {
     }
@@ -61,7 +63,7 @@ public class MockCategory implements Category {
     @Override
     public void stopLoadingFileAttributes() {
     }
-    
+
     @Override
     public ReadOnlyDoubleProperty progressProperty() {
 	return null;
@@ -129,7 +131,7 @@ public class MockCategory implements Category {
     public void setEndDate(LocalDate endDate) {
 	endDateProperty.set(endDate);
     }
-    
+
     public void setUserDefinedStartDate(LocalDate userDefinedStartDate) {
 	userDefinedStartDateProperty.set(userDefinedStartDate);
     }
@@ -150,5 +152,15 @@ public class MockCategory implements Category {
     @Override
     public boolean containsDate(LocalDate date) {
 	return false;
+    }
+
+    @Override
+    public BooleanProperty isAutomaticLoadingProperty() {
+	return null;
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty isLoadingProperty() {
+	return null;
     }
 }

@@ -3,7 +3,9 @@ package org.pottberg.ips.model;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -53,5 +55,9 @@ public interface Category {
     YearDirectoy getYearDirectory();
 
     public boolean containsDate(LocalDate date);
+    
+    public BooleanProperty isAutomaticLoadingProperty();
+    
+    public ReadOnlyBooleanProperty isLoadingProperty();
     
 }

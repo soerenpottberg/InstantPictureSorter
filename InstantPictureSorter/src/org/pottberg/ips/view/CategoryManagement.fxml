@@ -9,6 +9,8 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.GridPane?>
 <?import org.pottberg.ips.view.CategoryEditForm?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ToggleButton?>
 
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
 	<top>
@@ -54,7 +56,17 @@
 		</SplitPane>
 	</center>
 	<right>
-		<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
+		<VBox>
+			<CategoryEditForm fx:id="categoryEditForm"></CategoryEditForm>
+			<GridPane styleClass="gridpane">
+				<ToggleButton GridPane.rowIndex="0"
+					GridPane.columnIndex="0" fx:id="automaticLoadingToggleButton">Automatic Loading</ToggleButton>
+				<Button GridPane.rowIndex="1" GridPane.columnIndex="0"
+					fx:id="stopLoadingButton" onAction="#stopLoadingButtonClicked">Stop Loading</Button>
+				<Button GridPane.rowIndex="2" GridPane.columnIndex="0"
+					fx:id="restartLoadingButton" onAction="#restartLoadingButtonClicked">Restart Loading</Button>
+			</GridPane>
+		</VBox>
 	</right>
 	<bottom>
 		<HBox styleClass="statusbar">

@@ -3,8 +3,10 @@ package org.pottberg.ips.controller;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ToggleButton;
 
 import org.pottberg.ips.model.Category;
 import org.pottberg.ips.model.ImageData;
@@ -41,6 +44,15 @@ public class CategoryManagementController extends CategoryBasedController {
     @FXML
     private CategoryEditForm categoryEditForm;
 
+    @FXML
+    private ToggleButton automaticLoadingToggleButton;
+
+    @FXML
+    private Button stopLoadingButton;
+
+    @FXML
+    private Button restartLoadingButton;
+
     private ObjectBinding<ObservableList<ImageData>> selectedCategoryImageData;
 
     private DoubleProperty progressProperty;
@@ -48,29 +60,51 @@ public class CategoryManagementController extends CategoryBasedController {
     private BooleanBinding isMoveable;
 
     private DoubleProperty selectedCategoryProgressProperty;
-    
+
+    private BooleanProperty selectedCategoryIsLoadingProperty;
+
+    private BooleanProperty isAutomaticLoadingProperty;
+
     public CategoryManagementController() {
 	progressProperty = new SimpleDoubleProperty();
 	selectedCategoryProgressProperty = new SimpleDoubleProperty();
+	isAutomaticLoadingProperty = new SimpleBooleanProperty(true);
+	selectedCategoryIsLoadingProperty = new SimpleBooleanProperty(true);
     }
 
     @FXML
     protected void initialize() {
 	super.initialize();
-	
+
+	automaticLoadingToggleButton.selectedProperty()
+	    .bindBidirectional(isAutomaticLoadingProperty);
+
 	selectedCategoryProperty.addListener((observableImageGroup,
 	    oldImageGroup, newImageGroup) -> {
 	    selectedCategoryProgressProperty.unbind();
+	    selectedCategoryIsLoadingProperty.unbind();
 	    if (newImageGroup != null) {
 		selectedCategoryProgressProperty.bind(newImageGroup.progressProperty());
+		selectedCategoryIsLoadingProperty.bind(newImageGroup.isLoadingProperty());
 	    }
 	});
-	
-	isMoveable = selectedCategoryProperty.isNotNull().and(
-	    selectedCategoryProgressProperty.isEqualTo(
-		ImageLoader.LOADED_COMPLETLY, 1e-16));
 
-	categoryEditForm.disableProperty().bind(isMoveable.not());
+	stopLoadingButton.disableProperty()
+	    .bind(selectedCategoryProperty.isNull()
+		.or(selectedCategoryIsLoadingProperty.not()));
+
+	restartLoadingButton.disableProperty()
+	    .bind(
+		selectedCategoryProperty.isNull()
+		    .or(
+			selectedCategoryIsLoadingProperty.or(selectedCategoryProgressProperty.isEqualTo(
+			    ImageLoader.LOADED_COMPLETLY, 1e-16))));
+
+	isMoveable = selectedCategoryProperty.isNotNull()
+	    .and(selectedCategoryIsLoadingProperty.not());
+
+	categoryEditForm.disableProperty()
+	    .bind(isMoveable.not());
 
 	categoryManagementProgressBar.progressProperty()
 	    .bind(progressProperty);
@@ -99,8 +133,12 @@ public class CategoryManagementController extends CategoryBasedController {
 		    progressProperty.unbind();
 		    if (newCategory != null) {
 			progressProperty.bind(newCategory.progressProperty());
+			newCategory.isAutomaticLoadingProperty()
+			    .bindBidirectional(isAutomaticLoadingProperty);
 			newCategory.loadImageNames();
-			newCategory.startLoadingImages();
+			if (isAutomaticLoadingProperty.get()) {
+			    newCategory.startLoadingImages();
+			}
 		    }
 		});
 
@@ -117,6 +155,26 @@ public class CategoryManagementController extends CategoryBasedController {
     }
 
     @FXML
+    private void stopLoadingButtonClicked(ActionEvent event) {
+	Category category = selectedCategoryProperty.get();
+	if (category == null) {
+	    return;
+	}
+	category.stopLoadingFileAttributes();
+	category.stopLoadingImages();
+    }
+
+    @FXML
+    private void restartLoadingButtonClicked(ActionEvent event) {
+	Category category = selectedCategoryProperty.get();
+	if (category == null) {
+	    return;
+	}
+	category.startLoadingFileAttributes();
+	category.startLoadingImages();
+    }
+
+    @FXML
     private void openTargetDirectoryClicked(ActionEvent event) {
 	mainController.openTargetDirectoryClicked(event);
     }
@@ -130,7 +188,7 @@ public class CategoryManagementController extends CategoryBasedController {
 	super.setMainController(mainController);
 	categoryEditForm.setMainController(mainController);
     }
-    
+
     public DoubleProperty progressProperty() {
 	return progressProperty;
     }
