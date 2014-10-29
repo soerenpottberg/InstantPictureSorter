@@ -2,13 +2,13 @@ package org.pottberg.ips.controller;
 
 import static javafx.beans.binding.Bindings.createBooleanBinding;
 import static javafx.beans.binding.Bindings.createObjectBinding;
-import static javafx.beans.binding.Bindings.createStringBinding;
 import static javafx.beans.binding.Bindings.when;
+import static org.pottberg.ips.bindings.Binder.bindProperty;
+import static org.pottberg.ips.bindings.Binder.createBinding;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
@@ -196,13 +196,8 @@ public class ImageManagementController extends CategoryBasedController {
 	    selectedCategoryProperty.addListener(selectUserDefinedCategoryListener);
 	});
 
-	selectedImageGroupDate = createObjectBinding(() -> {
-	    ImageGroup selectedImageGroup = selectedImageGroupProperty.get();
-	    if (selectedImageGroup == null) {
-		return null;
-	    }
-	    return selectedImageGroup.getCreationDate();
-	}, selectedImageGroupProperty);
+	selectedImageGroupDate = createBinding(selectedImageGroupProperty,
+	    ImageGroup::getCreationDate);
 
 	suggestedCategoryProperty.bind(createObjectBinding(() -> {
 	    if (selectedImageGroupDate.get() == null) {
@@ -220,7 +215,7 @@ public class ImageManagementController extends CategoryBasedController {
 		}
 	    }
 	    return null;
-	}, selectedUnsortedImageData, selectedUnsortedImageData));
+	}, selectedImageGroupProperty, selectedUnsortedImageData));
 
 	selectedSourcePathProperty.addListener((observablePath, oldPath,
 	    newPath) -> {
@@ -278,34 +273,23 @@ public class ImageManagementController extends CategoryBasedController {
 
 	selectedImageGroupProperty.bind(getSelectedItemProperty(imageGroupListView));
 
-	selectedImageGroupImageData = Bindings.createObjectBinding(() -> {
-	    if (selectedImageGroupProperty.get() == null) {
-		return null;
-	    }
-	    return selectedImageGroupProperty.get()
-		.getImageDataList();
-	}, selectedImageGroupProperty);
+	selectedImageGroupImageData = createBinding(selectedImageGroupProperty,
+	    ImageGroup::getImageDataList);
 
 	selectedImageGroupProperty.addListener((observableImageGroup,
 	    oldImageGroup, newImageGroup) -> {
 	    selectedUnsortedImageData.clear();
-	    selectedImageGroupProgressProperty.unbind();
-	    if (newImageGroup != null) {
-		selectedImageGroupProgressProperty.bind(newImageGroup.progressProperty());
-	    }
 	});
+
+	bindProperty(selectedImageGroupProperty,
+	    selectedImageGroupProgressProperty, ImageGroup::progressProperty);
 
 	unsortedPicturesListView.itemsProperty()
 	    .bind(selectedImageGroupImageData);
 
 	suggestedCategoryPreviewLabel.textProperty()
-	    .bind(createStringBinding(() -> {
-		if (suggestedCategoryProperty.get() == null) {
-		    return "No Suggestion";
-		}
-		return suggestedCategoryProperty.get()
-		    .getDirectoryName();
-	    }, suggestedCategoryProperty));
+	    .bind(createBinding(suggestedCategoryProperty,
+		Category::getDirectoryName, "No Suggestion"));
 
 	newCategoryPreviewLabel.textProperty()
 	    .bind(
@@ -315,13 +299,8 @@ public class ImageManagementController extends CategoryBasedController {
 		    newCategoryNameTextField.textProperty()));
 
 	userDefinedCategoryPreviewLabel.textProperty()
-	    .bind(createStringBinding(() -> {
-		if (selectedCategoryProperty.get() == null) {
-		    return "No Category Selected";
-		}
-		return selectedCategoryProperty.get()
-		    .getDirectoryName();
-	    }, selectedCategoryProperty));
+	    .bind(createBinding(selectedCategoryProperty,
+		Category::getDirectoryName, "No Category Selected"));
 
 	categoryPreviewLabel.textProperty()
 	    .bind(when(categoryToggleGroup.selectedToggleProperty()

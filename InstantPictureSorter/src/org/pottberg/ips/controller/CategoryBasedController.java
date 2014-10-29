@@ -1,8 +1,9 @@
 package org.pottberg.ips.controller;
 
+import static org.pottberg.ips.bindings.Binder.createBinding;
+
 import java.nio.file.Path;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -63,13 +64,8 @@ public abstract class CategoryBasedController implements Controller {
 	selectedYearDirectoryProperty.bind(getSelectedItemProperty(yearsCombobox));
 	selectedCategoryProperty.bind(getSelectedItemProperty(categoriesListView));
 
-	selectedYearCategories = Bindings.createObjectBinding(() -> {
-	    if (selectedYearDirectoryProperty.get() == null) {
-		return null;
-	    }
-	    return selectedYearDirectoryProperty.get()
-		.getCategories();
-	}, selectedYearDirectoryProperty);
+	selectedYearCategories = createBinding(selectedYearDirectoryProperty,
+	    YearDirectoy::getCategories);
 
 	categoriesListView.itemsProperty()
 	    .bind(selectedYearCategories);

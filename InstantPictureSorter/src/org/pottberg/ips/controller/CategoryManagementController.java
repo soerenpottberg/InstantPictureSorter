@@ -1,6 +1,7 @@
 package org.pottberg.ips.controller;
 
-import javafx.beans.binding.Bindings;
+import static org.pottberg.ips.bindings.Binder.bindProperty;
+import static org.pottberg.ips.bindings.Binder.createBinding;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.BooleanProperty;
@@ -79,15 +80,11 @@ public class CategoryManagementController extends CategoryBasedController {
 	automaticLoadingToggleButton.selectedProperty()
 	    .bindBidirectional(isAutomaticLoadingProperty);
 
-	selectedCategoryProperty.addListener((observableImageGroup,
-	    oldImageGroup, newImageGroup) -> {
-	    selectedCategoryProgressProperty.unbind();
-	    selectedCategoryIsLoadingProperty.unbind();
-	    if (newImageGroup != null) {
-		selectedCategoryProgressProperty.bind(newImageGroup.progressProperty());
-		selectedCategoryIsLoadingProperty.bind(newImageGroup.isLoadingProperty());
-	    }
-	});
+	bindProperty(selectedCategoryProperty,
+	    selectedCategoryIsLoadingProperty, Category::isLoadingProperty);
+
+	bindProperty(selectedCategoryProperty,
+	    selectedCategoryProgressProperty, Category::progressProperty);
 
 	stopLoadingButton.disableProperty()
 	    .bind(selectedCategoryProperty.isNull()
@@ -141,14 +138,9 @@ public class CategoryManagementController extends CategoryBasedController {
 			}
 		    }
 		});
-
-	selectedCategoryImageData = Bindings.createObjectBinding(() -> {
-	    if (selectedCategoryProperty.get() == null) {
-		return null;
-	    }
-	    return selectedCategoryProperty.get()
-		.getImageDataList();
-	}, selectedCategoryProperty);
+	
+	selectedCategoryImageData = createBinding(selectedCategoryProperty,
+	    Category::getImageDataList);
 
 	sortedPicturesListView.itemsProperty()
 	    .bind(selectedCategoryImageData);

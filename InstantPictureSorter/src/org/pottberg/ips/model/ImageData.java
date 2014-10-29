@@ -1,6 +1,7 @@
 package org.pottberg.ips.model;
 
 import static javafx.beans.binding.Bindings.createObjectBinding;
+import static org.pottberg.ips.bindings.Binder.bindProperty;
 
 import java.net.URI;
 import java.nio.file.Path;
@@ -32,11 +33,11 @@ public class ImageData implements Comparable<ImageData> {
 	directoryProperty = new SimpleObjectProperty<>(directory);
 	pathPropety = new SimpleObjectProperty<>();
 	directoryPathProperty = new SimpleObjectProperty<>();
-	directoryProperty.addListener((observableDirectory, oldDirectory, newDirectory)->{
-	    directoryPathProperty.bind(newDirectory.pathProperty());
-	});
-	directoryPathProperty.bind(getDirectory().pathProperty());
-	pathPropety.bind(createObjectBinding(()->{
+	
+	bindProperty(directoryProperty,
+	    directoryPathProperty, Directory::pathProperty);
+
+	pathPropety.bind(createObjectBinding(() -> {
 	    return getDirectoryPath().resolve(getFileName());
 	}, directoryPathProperty));
     }
@@ -44,7 +45,7 @@ public class ImageData implements Comparable<ImageData> {
     public Path getDirectoryPath() {
 	return getDirectory().getPath();
     }
-    
+
     @Override
     public String toString() {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -66,10 +67,10 @@ public class ImageData implements Comparable<ImageData> {
     public Path getPath() {
 	return pathPropety.get();
     }
-    
+
     public ReadOnlyObjectProperty<Path> pathPropety() {
-   	return pathPropety;
-     }
+	return pathPropety;
+    }
 
     public ObjectProperty<Image> imagePorperty() {
 	return imageProperty;
@@ -106,13 +107,13 @@ public class ImageData implements Comparable<ImageData> {
     public void setDirectory(Directory directory) {
 	directoryProperty.set(directory);
     }
-    
+
     public Directory getDirectory() {
 	return directoryProperty.get();
     }
 
     public Path getFileName() {
-        return fileName;
+	return fileName;
     }
 
 }
