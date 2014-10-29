@@ -24,7 +24,7 @@ import org.pottberg.ips.model.loader.service.CreationDateLoaderService;
 import org.pottberg.ips.model.loader.service.ImageDataLoaderService;
 import org.pottberg.ips.model.loader.service.ImageLoaderService;
 
-public class SimpleCategory extends SimpleImageDirectory implements Category {
+public class SimpleCategory extends SimpleDirectory implements Category {
 
     private StringProperty nameProperty;
     private ObservableList<ImageData> imageDataList;
@@ -104,7 +104,7 @@ public class SimpleCategory extends SimpleImageDirectory implements Category {
 	this(yearDirectory, name, date, date, date, date, null);
 	CategoryNameBuilder categoryNameBuilder = new CategoryNameBuilder(this);
 	String completeName = categoryNameBuilder.getSuggestedName();
-	Path parentDirectory = yearDirectory.getDirectory();
+	Path parentDirectory = yearDirectory.getPath();
 	setPath(parentDirectory.resolve(completeName));
 	isLoadingProperty.set(false);
     }

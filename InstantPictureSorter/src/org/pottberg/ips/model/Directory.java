@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 import javafx.beans.property.ObjectProperty;
 
-public interface ImageDirectory {
+public interface Directory {
 
     public ObjectProperty<Path> pathProperty();
 

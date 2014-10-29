@@ -9,7 +9,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
-public interface Category extends ImageDirectory {
+public interface Category extends Directory {
 
     public StringProperty nameProperty();
 

@@ -5,31 +5,22 @@ import java.nio.file.Path;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class YearDirectoy {
+public class YearDirectoy extends SimpleDirectory {
 
-    private Path directory;
     private int year;
     private ObservableList<Category> categories;
 
-    public YearDirectoy(Path directory) {
-	this.directory = directory;
-	year = Integer.parseInt(directory.getFileName()
+    public YearDirectoy(Path path) {
+	super(path);
+	year = Integer.parseInt(getPath().getFileName()
 	    .toString());
 	categories = FXCollections.observableArrayList();
     }
 
     public YearDirectoy(Path parentDirectory, int year) {
-	this.directory = parentDirectory.resolve(String.valueOf(year));
+	super(parentDirectory.resolve(String.valueOf(year)));
 	this.year = year;
 	categories = FXCollections.observableArrayList();
-    }
-
-    public Path getDirectory() {
-	return directory;
-    }
-
-    public void setDirectory(Path directory) {
-	this.directory = directory;
     }
 
     public int getYear() {

@@ -17,7 +17,7 @@ public class ImageData implements Comparable<ImageData> {
     private ObjectProperty<Image> imageProperty;
     private Path fileName;
     private ObjectProperty<LocalDate> creationDateProperty;
-    private ObjectProperty<ImageDirectory> directoryProperty;
+    private ObjectProperty<Directory> directoryProperty;
     private ObjectProperty<Path> directoryPathProperty;
     private ObjectProperty<Path> pathPropety;
 
@@ -25,7 +25,7 @@ public class ImageData implements Comparable<ImageData> {
 	return getPath().toUri();
     }
 
-    public ImageData(Path fileName, ImageDirectory directory) {
+    public ImageData(Path fileName, Directory directory) {
 	this.fileName = fileName;
 	creationDateProperty = new SimpleObjectProperty<>();
 	imageProperty = new SimpleObjectProperty<>();
@@ -37,7 +37,6 @@ public class ImageData implements Comparable<ImageData> {
 	});
 	directoryPathProperty.bind(getDirectory().pathProperty());
 	pathPropety.bind(createObjectBinding(()->{
-	    System.out.println(getDirectoryPath().resolve(getFileName()));
 	    return getDirectoryPath().resolve(getFileName());
 	}, directoryPathProperty));
     }
@@ -100,15 +99,15 @@ public class ImageData implements Comparable<ImageData> {
 	return creationDateProperty.get();
     }
 
-    public ObjectProperty<ImageDirectory> directoryProperty() {
+    public ObjectProperty<Directory> directoryProperty() {
 	return directoryProperty;
     }
 
-    public void setDirectory(ImageDirectory directory) {
+    public void setDirectory(Directory directory) {
 	directoryProperty.set(directory);
     }
     
-    public ImageDirectory getDirectory() {
+    public Directory getDirectory() {
 	return directoryProperty.get();
     }
 

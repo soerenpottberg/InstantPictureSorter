@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
-public class MockCategory extends SimpleImageDirectory implements Category {
+public class MockCategory extends SimpleDirectory implements Category {
 
     private StringProperty nameProperty;
     private ObjectProperty<LocalDate> startDateProperty;

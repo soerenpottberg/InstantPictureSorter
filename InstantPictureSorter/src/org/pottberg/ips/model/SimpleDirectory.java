@@ -5,11 +5,11 @@ import java.nio.file.Path;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class SimpleImageDirectory implements ImageDirectory {
+public class SimpleDirectory implements Directory {
     
     private ObjectProperty<Path> pathProperty;
     
-    public SimpleImageDirectory(Path path) {
+    public SimpleDirectory(Path path) {
 	pathProperty = new SimpleObjectProperty<>(path);
     }
 

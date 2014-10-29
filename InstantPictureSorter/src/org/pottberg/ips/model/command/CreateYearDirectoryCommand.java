@@ -25,7 +25,7 @@ public class CreateYearDirectoryCommand extends SimpleCommand{
 
     @Override
     protected void updateFileSystem() throws IOException {
-	Files.createDirectory(yearDirectory.getDirectory());
+	Files.createDirectory(yearDirectory.getPath());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CreateYearDirectoryCommand extends SimpleCommand{
 
     @Override
     protected void revertFileSystem() throws IOException {
-	Files.delete(yearDirectory.getDirectory());
+	Files.delete(yearDirectory.getPath());
     }
     
     @Override
