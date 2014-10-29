@@ -1,7 +1,11 @@
 package org.pottberg.ips.controller;
 
+import static javafx.beans.binding.Bindings.format;
 import static javafx.beans.binding.Bindings.notEqual;
-import javafx.beans.binding.Bindings;
+import static javafx.beans.binding.Bindings.when;
+
+import java.time.LocalDate;
+
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -51,11 +55,12 @@ public class AttributedImageViewController {
 
     public void setImageData(ImageData data) {
 	imageProperty.bind(data.imagePorperty());
-	setName(data.getPath()
-	    .getFileName()
+	setName(data.getFileName()
 	    .toString());
-	StringExpression creationDate = Bindings.format("%1$td.%1$tm.%1$tY",
-	    data.creationDateProperty());
+	ObjectProperty<LocalDate> creationDateProperty = data.creationDateProperty();
+	StringExpression creationDate = when(creationDateProperty.isNull())
+	    .then("dd.mm.yyyy")
+	    .otherwise(format("%1$td.%1$tm.%1$tY", creationDateProperty));
 	creationDateText.textProperty()
 	    .bind(creationDate);
     }
