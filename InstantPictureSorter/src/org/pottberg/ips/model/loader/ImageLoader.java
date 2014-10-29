@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 
 public class ImageLoader extends Task<Void> {
 
-    private static final boolean LODING_CANCELLED = true;
     public static final double LOADED_COMPLETLY = 1;
     private Image image;
     private ObservableList<ImageData> imageDataList;
