@@ -152,7 +152,6 @@ public class CategoryManagementController extends CategoryBasedController {
 	if (category == null) {
 	    return;
 	}
-	category.stopLoadingFileAttributes();
 	category.stopLoadingImages();
     }
 
@@ -162,7 +161,6 @@ public class CategoryManagementController extends CategoryBasedController {
 	if (category == null) {
 	    return;
 	}
-	category.startLoadingFileAttributes();
 	category.startLoadingImages();
     }
 

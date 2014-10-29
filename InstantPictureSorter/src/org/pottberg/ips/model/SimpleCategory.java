@@ -70,7 +70,7 @@ public class SimpleCategory extends SimpleDirectory implements Category {
 	    public ImageData createImageData(Path file) {
 		return new ImageData(file.getFileName(), category);
 	    }
-	    
+
 	};
 	imageLoaderService = new ImageLoaderService();
 	fileAttributeLoaderService = new CreationDateLoaderService();
@@ -160,9 +160,9 @@ public class SimpleCategory extends SimpleDirectory implements Category {
 	}
 
 	imageNameLoader.setOnSucceeded(event -> {
+	    startService(fileAttributeLoaderService);
 	    if (isAutomaticLoadingProperty.get()) {
 		startService(imageLoaderService);
-		startService(fileAttributeLoaderService);
 	    }
 	});
 	new Thread(imageNameLoader).start();
