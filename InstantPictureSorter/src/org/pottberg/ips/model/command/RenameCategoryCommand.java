@@ -14,14 +14,14 @@ public class RenameCategoryCommand extends SimpleCommand {
 
     public RenameCategoryCommand(Category category, Path newName) {
 	this.category = category;
-	oldDirectory = category.getDirectory();
+	oldDirectory = category.getPath();
 	Path parentDirectory = oldDirectory.getParent();
 	newDirectoy = parentDirectory.resolve(newName);
     }
 
     @Override
     protected void updateApplicationState() {
-	category.setDirtectoy(newDirectoy);
+	category.setPath(newDirectoy);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class RenameCategoryCommand extends SimpleCommand {
 
     @Override
     protected void revertApplicationState() {
-	category.setDirtectoy(oldDirectory);
+	category.setPath(oldDirectory);
     }
 
     @Override

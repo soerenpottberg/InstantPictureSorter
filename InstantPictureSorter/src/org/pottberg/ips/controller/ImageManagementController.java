@@ -304,9 +304,7 @@ public class ImageManagementController extends CategoryBasedController {
 		    return "No Suggestion";
 		}
 		return suggestedCategoryProperty.get()
-		    .getDirectory()
-		    .getFileName()
-		    .toString();
+		    .getDirectoryName();
 	    }, suggestedCategoryProperty));
 
 	newCategoryPreviewLabel.textProperty()
@@ -322,9 +320,7 @@ public class ImageManagementController extends CategoryBasedController {
 		    return "No Category Selected";
 		}
 		return selectedCategoryProperty.get()
-		    .getDirectory()
-		    .getFileName()
-		    .toString();
+		    .getDirectoryName();
 	    }, selectedCategoryProperty));
 
 	categoryPreviewLabel.textProperty()

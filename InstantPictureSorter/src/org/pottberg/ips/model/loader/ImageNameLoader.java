@@ -14,7 +14,7 @@ import javafx.concurrent.Task;
 
 import org.pottberg.ips.model.ImageData;
 
-public class ImageNameLoader extends Task<ObservableList<ImageData>> {
+public abstract class ImageNameLoader extends Task<ObservableList<ImageData>> {
     private ReadOnlyObjectWrapper<ObservableList<ImageData>> imageData;
 
     private final Path dir;
@@ -38,7 +38,7 @@ public class ImageNameLoader extends Task<ObservableList<ImageData>> {
 		if (!Files.isRegularFile(file)) {
 		    continue;
 		}
-		final ImageData data = new ImageData(file);
+		final ImageData data = createImageData(file);
 		Platform.runLater(() -> {
 		    getPartialResults().add(data);
 		});
@@ -48,6 +48,8 @@ public class ImageNameLoader extends Task<ObservableList<ImageData>> {
 	}
 	return getPartialResults();
     }
+
+    public abstract ImageData createImageData(Path file);
 
     public final ReadOnlyObjectProperty<ObservableList<ImageData>> partialResultsProperty() {
 	return imageData.getReadOnlyProperty();

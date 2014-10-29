@@ -3,6 +3,7 @@ package org.pottberg.ips.model;
 import static javafx.beans.binding.Bindings.format;
 import static javafx.beans.binding.Bindings.when;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 import javafx.beans.binding.Bindings;
@@ -29,7 +30,7 @@ public class ImageGroup implements Comparable<ImageGroup> {
     private ObjectProperty<ObservableList<ImageData>> imageDataPorperty;
     private ImageLoaderService imageLoaderService;
 
-    public ImageGroup(LocalDate creationDate) {
+    public ImageGroup(LocalDate creationDate, Path dir) {
 	imageLoaderService = new ImageLoaderService();
 	this.creationDate = creationDate;
 	imageDataPorperty = new SimpleObjectProperty<>();
@@ -66,8 +67,8 @@ public class ImageGroup implements Comparable<ImageGroup> {
 	return creationDate;
     }
 
-    public static ImageGroup forImageData(ImageData data) {
-	return new ImageGroup(data.getCreationDate());
+    public static ImageGroup forImageData(ImageData data, Path dir) {
+	return new ImageGroup(data.getCreationDate(), dir);
     }
 
     public void addImageData(ImageData data) {

@@ -1,38 +1,51 @@
 package org.pottberg.ips.model;
 
+import static javafx.beans.binding.Bindings.createObjectBinding;
+
 import java.net.URI;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 
 public class ImageData implements Comparable<ImageData> {
 
     private ObjectProperty<Image> imageProperty;
-    private Path path;
+    private Path fileName;
     private ObjectProperty<LocalDate> creationDateProperty;
+    private ObjectProperty<ImageDirectory> directoryProperty;
+    private ObjectProperty<Path> directoryPathProperty;
+    private ObjectProperty<Path> pathPropety;
 
     public URI getUri() {
-	return path.toUri();
+	return getPath().toUri();
     }
 
-    public ImageData(LocalDate creationDate, Path path, Image image) {
-	this.path = path;
-	creationDateProperty = new SimpleObjectProperty<LocalDate>(creationDate);
-	imageProperty = new SimpleObjectProperty<Image>(image);
+    public ImageData(Path fileName, ImageDirectory directory) {
+	this.fileName = fileName;
+	creationDateProperty = new SimpleObjectProperty<>();
+	imageProperty = new SimpleObjectProperty<>();
+	directoryProperty = new SimpleObjectProperty<>(directory);
+	pathPropety = new SimpleObjectProperty<>();
+	directoryPathProperty = new SimpleObjectProperty<>();
+	directoryProperty.addListener((observableDirectory, oldDirectory, newDirectory)->{
+	    directoryPathProperty.bind(newDirectory.pathProperty());
+	});
+	directoryPathProperty.bind(getDirectory().pathProperty());
+	pathPropety.bind(createObjectBinding(()->{
+	    System.out.println(getDirectoryPath().resolve(getFileName()));
+	    return getDirectoryPath().resolve(getFileName());
+	}, directoryPathProperty));
     }
 
-    public ImageData(LocalDate creationDate, Path path) {
-	this(creationDate, path, null);
+    public Path getDirectoryPath() {
+	return getDirectory().getPath();
     }
-
-    public ImageData(Path path) {
-	this(null, path, null);
-    }
-
+    
     @Override
     public String toString() {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -52,23 +65,27 @@ public class ImageData implements Comparable<ImageData> {
     }
 
     public Path getPath() {
-	return path;
+	return pathPropety.get();
     }
+    
+    public ReadOnlyObjectProperty<Path> pathPropety() {
+   	return pathPropety;
+     }
 
     public ObjectProperty<Image> imagePorperty() {
-        return imageProperty;
+	return imageProperty;
     }
 
     public void setImage(Image image) {
-        imageProperty.set(image);
+	imageProperty.set(image);
     }
 
     public Image getImage() {
-        return imageProperty.get();
+	return imageProperty.get();
     }
 
     public boolean hasCreationDate() {
-        return getCreationDate() != null;
+	return getCreationDate() != null;
     }
 
     public ObjectProperty<LocalDate> creationDateProperty() {
@@ -80,12 +97,23 @@ public class ImageData implements Comparable<ImageData> {
     }
 
     public LocalDate getCreationDate() {
-        return creationDateProperty.get();
+	return creationDateProperty.get();
     }
 
-    public void setPath(Path path) {
-	this.path = path;	
+    public ObjectProperty<ImageDirectory> directoryProperty() {
+	return directoryProperty;
     }
 
+    public void setDirectory(ImageDirectory directory) {
+	directoryProperty.set(directory);
+    }
+    
+    public ImageDirectory getDirectory() {
+	return directoryProperty.get();
+    }
+
+    public Path getFileName() {
+        return fileName;
+    }
 
 }

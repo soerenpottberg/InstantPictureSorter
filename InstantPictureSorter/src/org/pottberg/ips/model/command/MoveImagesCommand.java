@@ -23,7 +23,7 @@ public class MoveImagesCommand extends ComplexCommand {
     @Override
     public String getName() {
 	return String.format("Move \"%i\" images to \"%s\"",
-	    imageDataList.size(), target.getDirectory());
+	    imageDataList.size(), target.getPath());
     }
 
 }

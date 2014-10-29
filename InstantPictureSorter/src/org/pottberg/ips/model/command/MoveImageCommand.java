@@ -25,11 +25,10 @@ public class MoveImageCommand extends SimpleCommand {
 	this.imageData = imageData;
 	this.source = source;
 	this.target = target;
-	Path filePath = imageData.getPath();
-	fileName = filePath.getFileName();
-	sourceDirectory = filePath.getParent();
-	targetDirectory = target.getDirectory();
-	sourcePath = sourceDirectory.resolve(fileName);
+	fileName = imageData.getFileName();
+	sourceDirectory = imageData.getDirectoryPath();
+	sourcePath = imageData.getPath();
+	targetDirectory = target.getPath();
 	targetPath = targetDirectory.resolve(fileName);
     }
 
@@ -39,7 +38,6 @@ public class MoveImageCommand extends SimpleCommand {
 	    .remove(imageData);
 	target.getImageDataList()
 	    .add(imageData);
-	imageData.setPath(targetPath);
     }
 
     @Override
@@ -53,7 +51,6 @@ public class MoveImageCommand extends SimpleCommand {
 	    .remove(imageData);
 	source.getImageDataList()
 	    .add(imageData);
-	imageData.setPath(sourcePath);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.pottberg.ips.model;
 
-import java.nio.file.Path;
 import java.time.LocalDate;
 
 import javafx.beans.property.BooleanProperty;
@@ -10,7 +9,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
-public interface Category {
+public interface Category extends ImageDirectory {
 
     public StringProperty nameProperty();
 
@@ -38,13 +37,7 @@ public interface Category {
 
     public ObjectProperty<LocalDate> userDefinedEndDateProperty();
 
-    public ObjectProperty<Path> directoryProperty();
-
-    public Path getDirectory();
-
     public void setName(String name);
-
-    public void setDirtectoy(Path dir);
 
     public String getDirectoryName();
 

@@ -1,6 +1,5 @@
 package org.pottberg.ips.model;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 
@@ -13,19 +12,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
-public class MockCategory implements Category {
+public class MockCategory extends SimpleImageDirectory implements Category {
 
     private StringProperty nameProperty;
     private ObjectProperty<LocalDate> startDateProperty;
     private ObjectProperty<LocalDate> endDateProperty;
     private ObjectProperty<LocalDate> userDefinedStartDateProperty;
     private ObjectProperty<LocalDate> userDefinedEndDateProperty;
-    private ObjectProperty<Path> directoryProperty;
     private int year;
 
     public MockCategory(int year) {
+	super(null);
 	this.year = year;
-	directoryProperty = new SimpleObjectProperty<>();
 	startDateProperty = new SimpleObjectProperty<>();
 	endDateProperty = new SimpleObjectProperty<>();
 	userDefinedStartDateProperty = new SimpleObjectProperty<>();
@@ -95,28 +93,13 @@ public class MockCategory implements Category {
     }
 
     @Override
-    public ObjectProperty<Path> directoryProperty() {
-	return directoryProperty;
-    }
-
-    @Override
-    public Path getDirectory() {
-	return directoryProperty.get();
-    }
-
-    @Override
     public void setName(String name) {
 	nameProperty.set(name);
     }
 
     @Override
-    public void setDirtectoy(Path dir) {
-	directoryProperty.set(dir);
-    }
-
-    @Override
     public String getDirectoryName() {
-	return getDirectory().getFileName()
+	return getPath().getFileName()
 	    .toString();
     }
 

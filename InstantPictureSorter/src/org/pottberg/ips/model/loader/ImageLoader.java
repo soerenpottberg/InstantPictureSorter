@@ -26,34 +26,26 @@ public class ImageLoader extends Task<Void> {
 	int i = 0;
 	updateProgress(i, imageDataList.size());
 	for (ImageData imageData : imageDataList) {
-	    i++;
-	    if (imageData.getImage() != null) {
-		updateProgress(i, imageDataList.size());
-		continue;
+	    if (imageData.getImage() == null) {
+		loadImage(imageData);
+		awaitImageLoading();
 	    }
-	    loadImage(imageData);
+	    i++;
 	    updateProgress(i, imageDataList.size());
-	    if(awaitImageLoading() == LODING_CANCELLED) {
+	    if (isCancelled()) {
 		return null;
 	    }
 	}
 	return null;
     }
 
-    private boolean awaitImageLoading() {
+    private void awaitImageLoading() {
 	while (image.getProgress() != LOADED_COMPLETLY && !image.isError()) {
-	    if (isCancelled()) {
-		return true; 
-	    }
 	    try {
 		Thread.sleep(100);
 	    } catch (InterruptedException e) {
-		if (isCancelled()) {
-		    return true;
-		}
 	    }
 	}
-	return false;
     }
 
     private void loadImage(ImageData imageData) {

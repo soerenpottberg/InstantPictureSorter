@@ -24,7 +24,7 @@ import org.pottberg.ips.model.loader.service.CreationDateLoaderService;
 import org.pottberg.ips.model.loader.service.ImageDataLoaderService;
 import org.pottberg.ips.model.loader.service.ImageLoaderService;
 
-public class SimpleCategory implements Category {
+public class SimpleCategory extends SimpleImageDirectory implements Category {
 
     private StringProperty nameProperty;
     private ObservableList<ImageData> imageDataList;
@@ -36,7 +36,6 @@ public class SimpleCategory implements Category {
     private ObjectProperty<LocalDate> endDateProperty;
     private ObjectProperty<LocalDate> userDefinedStartDateProperty;
     private ObjectProperty<LocalDate> userDefinedEndDateProperty;
-    private ObjectProperty<Path> directoryProperty;
     private CategoryNameParser categoryNameParser;
     private YearDirectoy yearDirectory;
     private DoubleProperty progressProperty;
@@ -46,10 +45,10 @@ public class SimpleCategory implements Category {
     private SimpleCategory(YearDirectoy yearDirectory, String name,
 	LocalDate startDate,
 	LocalDate endDate, LocalDate userDefinedStartDate,
-	LocalDate userDefinedEndDate) {
+	LocalDate userDefinedEndDate, Path path) {
+	super(path);
 	this.yearDirectory = yearDirectory;
 	imageDataList = FXCollections.observableArrayList();
-	directoryProperty = new SimpleObjectProperty<>();
 	startDateProperty = new SimpleObjectProperty<>(startDate);
 	endDateProperty = new SimpleObjectProperty<>(endDate);
 	userDefinedStartDateProperty = new SimpleObjectProperty<>(
@@ -62,9 +61,17 @@ public class SimpleCategory implements Category {
 	isLoadingProperty = new SimpleBooleanProperty();
     }
 
-    public SimpleCategory(YearDirectoy yearDirectory, Path directory) {
-	this(yearDirectory, null, null, null, null, null);
-	imageNameLoader = new ImageNameLoader(directory, imageDataList);
+    public SimpleCategory(YearDirectoy yearDirectory, Path path) {
+	this(yearDirectory, null, null, null, null, null, path);
+	final SimpleCategory category = this;
+	imageNameLoader = new ImageNameLoader(path, imageDataList) {
+
+	    @Override
+	    public ImageData createImageData(Path file) {
+		return new ImageData(file.getFileName(), category);
+	    }
+	    
+	};
 	imageLoaderService = new ImageLoaderService();
 	fileAttributeLoaderService = new CreationDateLoaderService();
 	fileAttributeLoaderService.setOnSucceeded(event -> {
@@ -86,7 +93,6 @@ public class SimpleCategory implements Category {
 	}, imageLoaderService.progressProperty(),
 	    fileAttributeLoaderService.progressProperty())
 	    );
-	setDirtectoy(directory);
 	parseDirectory();
 	isLoadingProperty.bind(imageNameLoader.runningProperty()
 	    .or(imageLoaderService.runningProperty())
@@ -95,17 +101,17 @@ public class SimpleCategory implements Category {
 
     public SimpleCategory(YearDirectoy yearDirectory, String name,
 	LocalDate date) {
-	this(yearDirectory, name, date, date, date, date);
+	this(yearDirectory, name, date, date, date, date, null);
 	CategoryNameBuilder categoryNameBuilder = new CategoryNameBuilder(this);
 	String completeName = categoryNameBuilder.getSuggestedName();
 	Path parentDirectory = yearDirectory.getDirectory();
-	setDirtectoy(parentDirectory.resolve(completeName));
+	setPath(parentDirectory.resolve(completeName));
 	isLoadingProperty.set(false);
     }
 
     private void parseDirectory() {
 	if (categoryNameParser == null) {
-	    categoryNameParser = new CategoryNameParser(directoryProperty);
+	    categoryNameParser = new CategoryNameParser(pathProperty());
 	}
 	nameProperty.set(categoryNameParser.getName());
 	userDefinedStartDateProperty.set(categoryNameParser.getStartDate());
@@ -237,28 +243,13 @@ public class SimpleCategory implements Category {
     }
 
     @Override
-    public ObjectProperty<Path> directoryProperty() {
-	return directoryProperty;
-    }
-
-    @Override
-    public Path getDirectory() {
-	return directoryProperty.get();
-    }
-
-    @Override
     public void setName(String name) {
 	nameProperty.set(name);
     }
 
     @Override
-    public void setDirtectoy(Path dir) {
-	directoryProperty.set(dir);
-    }
-
-    @Override
     public String getDirectoryName() {
-	return getDirectory().getFileName()
+	return getPath().getFileName()
 	    .toString();
     }
 

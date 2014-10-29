@@ -143,7 +143,7 @@ public class CategoryEditFormController {
 		currentPathLabel.textProperty()
 		    .bind(createStringBinding(() -> {
 			return newCategory.getDirectoryName();
-		    }, newCategory.directoryProperty()));
+		    }, newCategory.pathProperty()));
 		startDatePicker.valueProperty()
 		    .addListener(selectUserDefinedNameListener);
 		endDatePicker.valueProperty()

@@ -23,7 +23,7 @@ public class CreateCategoryCommand extends SimpleCommand {
 
     @Override
     protected void updateFileSystem() throws IOException {
-	Files.createDirectory(category.getDirectory());
+	Files.createDirectory(category.getPath());
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CreateCategoryCommand extends SimpleCommand {
 
     @Override
     protected void revertFileSystem() throws IOException {
-	Files.delete(category.getDirectory());
+	Files.delete(category.getPath());
     }
 
     @Override

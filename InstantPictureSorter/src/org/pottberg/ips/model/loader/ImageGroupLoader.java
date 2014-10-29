@@ -13,6 +13,7 @@ import javafx.concurrent.Task;
 
 import org.pottberg.ips.model.ImageData;
 import org.pottberg.ips.model.ImageGroup;
+import org.pottberg.ips.model.SimpleImageDirectory;
 
 public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 
@@ -48,7 +49,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 	try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir,
 	    "*.{jpg,JPG,jpeg,JPEG}")) {
 	    for (Path imagePath : stream) {
-		imageData.add(new ImageData(imagePath));
+		imageData.add(new ImageData(imagePath, new SimpleImageDirectory(dir)));
 	    }
 	}
 	return imageData;
@@ -76,7 +77,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 	ImageGroup currentGroup = null;
 	for (ImageData data : imageData) {
 	    if (!data.fitInImageGroup(currentGroup)) {
-		currentGroup = ImageGroup.forImageData(data);
+		currentGroup = ImageGroup.forImageData(data, dir);
 		imageGroups.add(currentGroup);
 	    }
 	    currentGroup.addImageData(data);
