@@ -97,7 +97,13 @@ public class MainController implements Controller {
 	    return;
 	}
 
-	selectedTargetPathProperty.set(selectedDirectory);
+	try {
+	    verifyDoesNotContainSourceDirectory(selectedDirectory);
+	    selectedTargetPathProperty.set(selectedDirectory);
+	} catch (CommandExecutionException e) {
+	    displayException("Change target directory to " + selectedDirectory,
+		e);
+	}
     }
 
     @FXML
@@ -109,7 +115,59 @@ public class MainController implements Controller {
 	    return;
 	}
 
-	selectedSourcePathProperty.set(selectedDirectory);
+	try {
+	    verifyIsNotContainedInTargetDirectory(selectedDirectory);
+	    selectedSourcePathProperty.set(selectedDirectory);
+	} catch (CommandExecutionException e) {
+	    displayException("Change source directory to " + selectedDirectory,
+		e);
+	}
+    }
+
+    private void verifyDoesNotContainSourceDirectory(
+	final Path selectedDirectory) throws CommandExecutionException {
+	Path sourcePath = selectedSourcePathProperty.get();
+	if (sourcePath == null) {
+	    return;
+	}
+	if (sourcePath.getNameCount() < selectedDirectory.getNameCount()) {
+	    return;
+	}
+	if (!sourcePath.getRoot()
+	    .equals(selectedDirectory.getRoot())) {
+	    return;
+	}
+	verifyIsNotParentPath(selectedDirectory, sourcePath);
+    }
+
+    private void verifyIsNotContainedInTargetDirectory(
+	final Path selectedDirectory) throws CommandExecutionException {
+	Path targetPath = selectedTargetPathProperty.get();
+	if (targetPath == null) {
+	    return;
+	}
+	if (targetPath.getNameCount() > selectedDirectory.getNameCount()) {
+	    return;
+	}
+	if (!targetPath.getRoot()
+	    .equals(selectedDirectory.getRoot())) {
+	    return;
+	}
+	verifyIsNotParentPath(targetPath, selectedDirectory);
+    }
+
+    private void verifyIsNotParentPath(final Path targetPath, Path sourcePath)
+        throws CommandExecutionException {
+        Path sourceSubdirectory = sourcePath.subpath(0,
+            targetPath.getNameCount());
+        Path targetSubdirectory = targetPath.subpath(0,
+            targetPath.getNameCount());
+        if (sourceSubdirectory.equals(targetSubdirectory)) {
+            throw new CommandExecutionException(
+        	new IllegalArgumentException(
+        	    "Source path cannot be a sub directory of the target path."));
+    
+        }
     }
 
     private Path openDirectoryChooser(String title) {
@@ -155,11 +213,12 @@ public class MainController implements Controller {
     }
 
     private Window getRootWindow() {
-        return root.getScene()
-            .getWindow();
+	return root.getScene()
+	    .getWindow();
     }
 
-    private void displayException(String commandName, CommandExecutionException e) {
+    private void displayException(String commandName,
+	CommandExecutionException e) {
 	Stage dialogStage = new Stage();
 	dialogStage.initModality(Modality.WINDOW_MODAL);
 	dialogStage.initOwner(getRootWindow());
