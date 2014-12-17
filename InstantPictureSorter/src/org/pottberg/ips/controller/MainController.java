@@ -9,13 +9,19 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import org.pottberg.ips.model.YearDirectoy;
+import org.pottberg.ips.model.command.Command;
+import org.pottberg.ips.model.command.CommandExecutionException;
 import org.pottberg.ips.model.command.CommandExecutor;
 import org.pottberg.ips.model.loader.service.CategoryLoaderService;
 import org.pottberg.ips.view.CategoryManagement;
+import org.pottberg.ips.view.ErrorDialog;
 import org.pottberg.ips.view.ImageManagement;
 import org.pottberg.ips.view.Main;
 
@@ -123,20 +129,44 @@ public class MainController implements Controller {
 
     @FXML
     public void undoClicked(ActionEvent event) {
-	commandExecutor.undo();
+	try {
+	    commandExecutor.undo();
+	} catch (CommandExecutionException e) {
+	    displayException("Undo", e);
+	}
     }
 
     public void redoClicked(ActionEvent event) {
-	commandExecutor.redo();
+	try {
+	    commandExecutor.redo();
+	} catch (CommandExecutionException e) {
+	    displayException("Redo", e);
+	}
+    }
+
+    public void executeCommand(Command command) {
+	try {
+	    commandExecutor.execute(command);
+	} catch (CommandExecutionException e) {
+	    displayException(command.getName(), e);
+	}
     }
 
     private Window getRootWindow() {
-	return root.getScene()
-	    .getWindow();
+        return root.getScene()
+            .getWindow();
     }
 
-    public CommandExecutor getCommandExecutor() {
-	return commandExecutor;
+    private void displayException(String commandName, CommandExecutionException e) {
+	Stage dialogStage = new Stage();
+	dialogStage.initModality(Modality.WINDOW_MODAL);
+	dialogStage.initOwner(getRootWindow());
+	ErrorDialog dialogRoot = new ErrorDialog();
+	dialogRoot.setErrorMessage("Command Failed: " + commandName);
+	Scene dialogScene = new Scene(dialogRoot);
+	dialogStage.setTitle("Exception: " + e.getMessage());
+	dialogStage.setScene(dialogScene);
+	dialogStage.show();
     }
 
 }

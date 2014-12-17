@@ -377,11 +377,9 @@ public class ImageManagementController extends CategoryBasedController {
 		complexCommand.addCommand(createCategoryCommand);
 	    }
 	    complexCommand.addCommand(moveImagemsCommand);
-	    mainController.getCommandExecutor()
-		.execute(complexCommand);
+	    mainController.executeCommand(complexCommand);
 	} else {
-	    mainController.getCommandExecutor()
-		.execute(moveImagemsCommand);
+	    mainController.executeCommand(moveImagemsCommand);
 	}
     }
 

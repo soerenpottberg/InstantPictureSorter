@@ -200,8 +200,7 @@ public class CategoryEditFormController {
 	String newName = getNewName();
 	Command command = new RenameCategoryCommand(category,
 	    Paths.get(newName));
-	mainController.getCommandExecutor()
-	    .execute(command);
+	mainController.executeCommand(command);
     }
 
     @FXML
