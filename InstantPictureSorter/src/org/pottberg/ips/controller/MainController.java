@@ -131,6 +131,7 @@ public class MainController implements Controller {
     public void undoClicked(ActionEvent event) {
 	try {
 	    commandExecutor.undo();
+	    categoryManagement.refresh();
 	} catch (CommandExecutionException e) {
 	    displayException("Undo", e);
 	}
@@ -139,6 +140,7 @@ public class MainController implements Controller {
     public void redoClicked(ActionEvent event) {
 	try {
 	    commandExecutor.redo();
+	    categoryManagement.refresh();
 	} catch (CommandExecutionException e) {
 	    displayException("Redo", e);
 	}

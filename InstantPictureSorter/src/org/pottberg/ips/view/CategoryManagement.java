@@ -21,4 +21,8 @@ public class CategoryManagement extends CategoryBasedView {
 	return controller.progressProperty();
     }
 
+    public void refresh() {
+	controller.refresh();
+    }
+
 }

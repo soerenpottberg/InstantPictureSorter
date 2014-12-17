@@ -35,4 +35,8 @@ public class CategoryEditForm extends GridPane {
 	controller.setMainController(mainController);
     }
 
+    public void reset() {
+	controller.reset();
+    }
+
 }

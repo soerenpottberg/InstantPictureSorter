@@ -205,11 +205,7 @@ public class CategoryEditFormController {
 
     @FXML
     private void resetCategoryClicked(ActionEvent event) {
-	Category category = getCategory();
-	if (category == null) {
-	    return;
-	}
-	category.reset();
+	reset();
     }
 
     private String getNewName() {
@@ -226,6 +222,14 @@ public class CategoryEditFormController {
 
     public void setMainController(MainController mainController) {
 	this.mainController = mainController;
+    }
+
+    public void reset() {
+	Category category = getCategory();
+	if (category == null) {
+	    return;
+	}
+	category.reset();
     }
 
 }

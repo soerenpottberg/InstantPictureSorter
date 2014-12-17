@@ -182,4 +182,8 @@ public class CategoryManagementController extends CategoryBasedController {
     public DoubleProperty progressProperty() {
 	return progressProperty;
     }
+
+    public void refresh() {
+	categoryEditForm.reset();
+    }
 }
