@@ -49,7 +49,7 @@ public class ImageGroupLoader extends Task<ObservableList<ImageGroup>> {
 	try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir,
 	    "*.{jpg,JPG,jpeg,JPEG}")) {
 	    for (Path imagePath : stream) {
-		imageData.add(new ImageData(imagePath, new SimpleDirectory(dir)));
+		imageData.add(new ImageData(imagePath.getFileName(), new SimpleDirectory(dir)));
 	    }
 	}
 	return imageData;
